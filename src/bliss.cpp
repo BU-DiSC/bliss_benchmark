@@ -1,3 +1,5 @@
+#include <alex.h>
+#include <lipp.h>
 #include <spdlog/spdlog.h>
 
 #include <cxxopts.hpp>

@@ -1,0 +1,6 @@
+[submodule "external/ALEX"]
+	path = external/ALEX
+	url = git@github.com:microsoft/ALEX.git
+[submodule "external/lipp"]
+	path = external/lipp
+	url = git@github.com:Jiacheng-WU/lipp.git

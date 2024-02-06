@@ -15,6 +15,8 @@ if (NOT spdlog_POPULATED)
     add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR})
 endif()
 
+
+
 FetchContent_Declare(
     cxxopts
     GIT_REPOSITORY https://github.com/jarro2783/cxxopts
@@ -26,3 +28,33 @@ set(CXXOPTS_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(CXXOPTS_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
 set(CXXOPTS_ENABLE_WARNINGS OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(cxxopts)
+
+
+
+FetchContent_Declare(
+    alex
+    GIT_REPOSITORY https://github.com/microsoft/ALEX.git
+    GIT_TAG master
+)
+FetchContent_GetProperties(alex)
+if (NOT alex_POPULATED)
+    FetchContent_Populate(alex)
+endif()
+
+add_library(alex INTERFACE)
+target_include_directories(alex INTERFACE ${alex_SOURCE_DIR}/src/core)
+
+
+
+FetchContent_Declare(
+    lipp
+    GIT_REPOSITORY https://github.com/Jiacheng-WU/lipp
+    GIT_TAG main
+)
+FetchContent_GetProperties(lipp)
+if (NOT lipp_POPULATED)
+    FetchContent_Populate(lipp)
+endif()
+
+add_library(lipp INTERFACE)
+target_include_directories(lipp INTERFACE ${lipp_SOURCE_DIR}/src/core)

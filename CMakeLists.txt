@@ -17,4 +17,6 @@ add_executable(bliss src/bliss.cpp)
 target_link_libraries(bliss
     spdlog::spdlog
     cxxopts
+    alex
+    lipp
 )

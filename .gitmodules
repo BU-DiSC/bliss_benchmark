@@ -4,9 +4,6 @@
 [submodule "external/lipp"]
 	path = external/lipp
     url = git@github.com:Jiacheng-WU/lipp.git
-[submodule "bods"]
-	path = bods
-	url = git@github.com:BU-DiSC/bods.git
 [submodule "external/bods"]
 	path = external/bods
 	url = git@github.com:BU-DiSC/bods.git

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sstream>
-#include <string>
 #include <stdexcept>
+#include <string>
 
 bool validateIntRange(int value, int min, int max) {
     return (value >= min && value <= max);
@@ -56,37 +56,44 @@ int main(int argc, char* argv[]) {
             } else if (arg == "--preload_factor" && i + 1 < argc) {
                 preload_factor = parseArgument<int>(argv[++i]);
                 if (!validateIntRange(preload_factor, 0, 100)) {
-                    throw std::runtime_error("Preload factor must be between 0 and 100");
+                    throw std::runtime_error(
+                        "Preload factor must be between 0 and 100");
                 }
             } else if (arg == "--raw_write_factor" && i + 1 < argc) {
                 raw_write_factor = parseArgument<int>(argv[++i]);
                 if (!validateIntRange(raw_write_factor, 0, 100)) {
-                    throw std::runtime_error("Raw write factor must be between 0 and 100");
+                    throw std::runtime_error(
+                        "Raw write factor must be between 0 and 100");
                 }
             } else if (arg == "--raw_read_factor" && i + 1 < argc) {
                 raw_read_factor = parseArgument<int>(argv[++i]);
                 if (!validateIntRange(raw_read_factor, 0, 100)) {
-                    throw std::runtime_error("Raw read factor must be between 0 and 100");
+                    throw std::runtime_error(
+                        "Raw read factor must be between 0 and 100");
                 }
             } else if (arg == "--read_write_ratio" && i + 1 < argc) {
                 read_write_ratio = parseArgument<float>(argv[++i]);
                 if (!validateFloatRange(read_write_ratio, 0.0f, 1.0f)) {
-                    throw std::runtime_error("Read write ratio must be between 0.0 and 1.0");
+                    throw std::runtime_error(
+                        "Read write ratio must be between 0.0 and 1.0");
                 }
             } else if (arg == "--index" && i + 1 < argc) {
                 index = argv[++i];
                 if (!validateIndex(index)) {
-                    throw std::runtime_error("Index must be either 'alex' or 'lipp'");
+                    throw std::runtime_error(
+                        "Index must be either 'alex' or 'lipp'");
                 }
                 index_set = true;
             } else {
-                throw std::runtime_error("Unknown or incomplete argument: " + arg);
+                throw std::runtime_error("Unknown or incomplete argument: " +
+                                         arg);
             }
         }
 
-        if (!data_file_set || preload_factor == -1 || raw_write_factor == -1 || 
+        if (!data_file_set || preload_factor == -1 || raw_write_factor == -1 ||
             raw_read_factor == -1 || read_write_ratio == -1.0f || !index_set) {
-            throw std::runtime_error("Not all required arguments were provided");
+            throw std::runtime_error(
+                "Not all required arguments were provided");
         }
 
         // Call the respective function based on the index value
@@ -96,7 +103,7 @@ int main(int argc, char* argv[]) {
             processIndexLipp();
         }
 
-        // Display the values 
+        // Display the values
         std::cout << "Data File: " << data_file << std::endl;
         std::cout << "Preload Factor: " << preload_factor << std::endl;
         std::cout << "Raw Write Factor: " << raw_write_factor << std::endl;
@@ -106,7 +113,10 @@ int main(int argc, char* argv[]) {
 
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
-        std::cerr << "Usage: --data_file <path> --preload_factor <int> --raw_write_factor <int> --raw_read_factor <int> --read_write_ratio <float> --index <alex|lipp>" << std::endl;
+        std::cerr << "Usage: --data_file <path> --preload_factor <int> "
+                     "--raw_write_factor <int> --raw_read_factor <int> "
+                     "--read_write_ratio <float> --index <alex|lipp>"
+                  << std::endl;
         return 1;
     }
 

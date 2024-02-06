@@ -34,3 +34,6 @@
 # Build
 .cache
 build
+
+# IDE
+.vscode/

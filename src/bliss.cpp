@@ -1,124 +1,88 @@
+#include <spdlog/spdlog.h>
+
+#include <cxxopts.hpp>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 
-bool validateIntRange(int value, int min, int max) {
-    return (value >= min && value <= max);
-}
+struct BlissConfig {
+    std::string data_file;
+    double preload_factor;
+    double raw_write_factor;
+    double raw_read_factor;
+    double mixed_read_write_ratio;
+    std::string index;
+};
 
-bool validateFloatRange(float value, float min, float max) {
-    return (value >= min && value <= max);
-}
+BlissConfig parse_args(int argc, char* argv[]) {
+    BlissConfig config;
+    cxxopts::Options options(
+        "bliss", "BLISS: Benchmarking Learned Index Structures for Sortedness");
 
-bool validateIndex(const std::string& value) {
-    return (value == "alex" || value == "lipp");
-}
+    try {
+        options.add_options()("d,data_file", "Path to the data file",
+                              cxxopts::value<std::string>())(
+            "p,preload_factor", "Preload factor",
+            cxxopts::value<double>()->default_value("0.5"))(
+            "w,raw_write_factor", "Raw write factor",
+            cxxopts::value<double>()->default_value("1.0"))(
+            "r,raw_read_factor", "Raw read factor",
+            cxxopts::value<double>()->default_value("0.1"))(
+            "m,mixed_read_write_ratio", "Read write ratio",
+            cxxopts::value<double>()->default_value("0.5"))(
+            "i,index", "Index type (alex|lipp)",
+            cxxopts::value<std::string>()->default_value("btree"));
 
-template <typename T>
-T parseArgument(const char* arg) {
-    std::istringstream iss(arg);
-    T value;
-    iss >> value;
-    if (iss.fail() || !iss.eof()) {
-        throw std::invalid_argument("Invalid argument format");
+        auto result = options.parse(argc, argv);
+        config.data_file = result["data_file"].as<std::string>();
+        config.preload_factor = result["preload_factor"].as<double>();
+        config.raw_write_factor = result["raw_write_factor"].as<double>();
+        config.raw_read_factor = result["raw_read_factor"].as<double>();
+        config.mixed_read_write_ratio =
+            result["mixed_read_write_ratio"].as<double>();
+        config.index = result["index"].as<std::string>();
+
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        std::cerr << options.help() << std::endl;
+        exit(1);
     }
-    return value;
+    return config;
+}
+
+void display_config(BlissConfig config) {
+    spdlog::info("Data File: {}", config.data_file);
+    spdlog::info("Preload Factor: {}", config.preload_factor);
+    spdlog::info("Raw Write Factor: {}", config.raw_write_factor);
+    spdlog::info("Raw Read Factor: {}", config.raw_read_factor);
+    spdlog::info("Read Write Ratio: {}", config.mixed_read_write_ratio);
+    spdlog::info("Index: {}", config.index);
 }
 
 // Separate functions for each index
 void processIndexAlex() {
     // Placeholder for "alex"
-    std::cout << "Processing index: ALEX" << std::endl;
+    spdlog::info("Processing index: ALEX");
 }
 
 void processIndexLipp() {
     // Placeholder for "lipp"
-    std::cout << "Processing index: LIPP" << std::endl;
+    spdlog::info("Processing index: LIPP");
 }
 
 int main(int argc, char* argv[]) {
-    std::string data_file;
-    bool data_file_set = false;
-    int preload_factor = -1;
-    int raw_write_factor = -1;
-    int raw_read_factor = -1;
-    float read_write_ratio = -1.0f;
-    std::string index;
-    bool index_set = false;
+    // bool index_set = false;
+    auto config = parse_args(argc, argv);
 
-    try {
-        for (int i = 1; i < argc; ++i) {
-            std::string arg = argv[i];
-            if (arg == "--data_file" && i + 1 < argc) {
-                data_file = argv[++i];
-                data_file_set = true;
-            } else if (arg == "--preload_factor" && i + 1 < argc) {
-                preload_factor = parseArgument<int>(argv[++i]);
-                if (!validateIntRange(preload_factor, 0, 100)) {
-                    throw std::runtime_error(
-                        "Preload factor must be between 0 and 100");
-                }
-            } else if (arg == "--raw_write_factor" && i + 1 < argc) {
-                raw_write_factor = parseArgument<int>(argv[++i]);
-                if (!validateIntRange(raw_write_factor, 0, 100)) {
-                    throw std::runtime_error(
-                        "Raw write factor must be between 0 and 100");
-                }
-            } else if (arg == "--raw_read_factor" && i + 1 < argc) {
-                raw_read_factor = parseArgument<int>(argv[++i]);
-                if (!validateIntRange(raw_read_factor, 0, 100)) {
-                    throw std::runtime_error(
-                        "Raw read factor must be between 0 and 100");
-                }
-            } else if (arg == "--read_write_ratio" && i + 1 < argc) {
-                read_write_ratio = parseArgument<float>(argv[++i]);
-                if (!validateFloatRange(read_write_ratio, 0.0f, 1.0f)) {
-                    throw std::runtime_error(
-                        "Read write ratio must be between 0.0 and 1.0");
-                }
-            } else if (arg == "--index" && i + 1 < argc) {
-                index = argv[++i];
-                if (!validateIndex(index)) {
-                    throw std::runtime_error(
-                        "Index must be either 'alex' or 'lipp'");
-                }
-                index_set = true;
-            } else {
-                throw std::runtime_error("Unknown or incomplete argument: " +
-                                         arg);
-            }
-        }
+    // display the config
+    display_config(config);
 
-        if (!data_file_set || preload_factor == -1 || raw_write_factor == -1 ||
-            raw_read_factor == -1 || read_write_ratio == -1.0f || !index_set) {
-            throw std::runtime_error(
-                "Not all required arguments were provided");
-        }
-
-        // Call the respective function based on the index value
-        if (index == "alex") {
-            processIndexAlex();
-        } else if (index == "lipp") {
-            processIndexLipp();
-        }
-
-        // Display the values
-        std::cout << "Data File: " << data_file << std::endl;
-        std::cout << "Preload Factor: " << preload_factor << std::endl;
-        std::cout << "Raw Write Factor: " << raw_write_factor << std::endl;
-        std::cout << "Raw Read Factor: " << raw_read_factor << std::endl;
-        std::cout << "Read Write Ratio: " << read_write_ratio << std::endl;
-        std::cout << "Index: " << index << std::endl;
-
-    } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
-        std::cerr << "Usage: --data_file <path> --preload_factor <int> "
-                     "--raw_write_factor <int> --raw_read_factor <int> "
-                     "--read_write_ratio <float> --index <alex|lipp>"
-                  << std::endl;
-        return 1;
+    // Call the respective function based on the index value
+    if (config.index == "alex") {
+        processIndexAlex();
+    } else if (config.index == "lipp") {
+        processIndexLipp();
     }
-
     return 0;
 }

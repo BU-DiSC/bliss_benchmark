@@ -7,9 +7,3 @@
 [submodule "external/bods"]
 	path = external/bods
 	url = git@github.com:BU-DiSC/bods.git
-[submodule "external/spdlog"]
-	path = external/spdlog
-	url = git@github.com:gabime/spdlog.git
-[submodule "external/cxxopts"]
-	path = external/cxxopts
-	url = git@github.com:jarro2783/cxxopts.git

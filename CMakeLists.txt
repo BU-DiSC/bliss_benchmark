@@ -5,12 +5,16 @@ project(bliss_benchmark VERSION 1.0
 )
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
-add_subdirectory(external/spdlog)
-add_subdirectory(external/cxxopts)
+add_subdirectory(external)
 
+# =============================================================================
+# HEADER bliss
+#   Executable and linking libraries
+# =============================================================================
 add_executable(bliss src/bliss.cpp)
 target_link_libraries(bliss
-    spdlog
+    spdlog::spdlog
     cxxopts
 )

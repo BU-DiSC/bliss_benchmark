@@ -62,6 +62,44 @@ void display_config(BlissConfig config) {
     spdlog::info("Index: {}", config.index);
 }
 
+//read test file
+std::vector<int> readIntegersFromFile(const std::string& filename) {
+    std::vector<int> integers;
+    std::ifstream file(filename);
+
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return integers;
+    }
+
+    int value;
+    while (file >> value) {
+        integers.push_back(value);
+    }
+
+    file.close();
+    return integers;
+}
+//read integer as string
+std::vector<std::string> readIntegersAsStringFromFile(const std::string& filename) {
+    std::vector<std::string> integerStrings;
+    std::ifstream file(filename);
+
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return integerStrings;
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        // Optionally, you can add a check here to verify that the line is a valid integer
+        integerStrings.push_back(line);
+    }
+
+    file.close();
+    return integerStrings;
+}
+
 // Separate functions for each index
 void processIndexAlex() {
     // Placeholder for "alex"
@@ -80,11 +118,21 @@ int main(int argc, char* argv[]) {
     // display the config
     display_config(config);
 
+    //std::vector<int> integers = readIntegersFromFile(config.data_file);
+    std::vector<std::string> integerStrings = readIntegersAsStringFromFile(config.data_file);
     // Call the respective function based on the index value
     if (config.index == "alex") {
         processIndexAlex();
     } else if (config.index == "lipp") {
         processIndexLipp();
     }
+
+    //for (int i : integers) {
+    //std::cout << i << std::endl;
+    //}
+    for (const std::string& str : integerStrings) {
+        std::cout << str << std::endl;
+    }
+
     return 0;
 }

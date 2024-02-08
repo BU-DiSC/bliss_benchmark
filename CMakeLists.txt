@@ -21,7 +21,7 @@ endif()
 #   Bliss lib files
 # =============================================================================
 add_library(bliss OBJECT
-    ${CMAKE_SOURCE_DIR}/src/bliss/util/reader.cpp
+    ${CMAKE_SOURCE_DIR}/src/bliss/util/timer.h
     ${CMAKE_SOURCE_DIR}/src/bliss/util/reader.h
 )
 

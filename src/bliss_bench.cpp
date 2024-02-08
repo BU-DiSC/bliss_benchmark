@@ -6,6 +6,8 @@
 #include <iostream>
 #include <string>
 
+#include "bliss/util/reader.h"
+
 struct BlissConfig {
     std::string data_file;
     double preload_factor;
@@ -60,46 +62,6 @@ void display_config(BlissConfig config) {
     spdlog::info("Index: {}", config.index);
 }
 
-// read test file
-std::vector<int> readIntegersFromFile(const std::string& filename) {
-    std::vector<int> integers;
-    std::ifstream file(filename);
-
-    if (!file.is_open()) {
-        std::cerr << "Error opening file: " << filename << std::endl;
-        return integers;
-    }
-
-    int value;
-    while (file >> value) {
-        integers.push_back(value);
-    }
-
-    file.close();
-    return integers;
-}
-// read integer as string
-std::vector<std::string> readIntegersAsStringFromFile(
-    const std::string& filename) {
-    std::vector<std::string> integerStrings;
-    std::ifstream file(filename);
-
-    if (!file.is_open()) {
-        std::cerr << "Error opening file: " << filename << std::endl;
-        return integerStrings;
-    }
-
-    std::string line;
-    while (std::getline(file, line)) {
-        // Optionally, you can add a check here to verify that the line is a
-        // valid integer
-        integerStrings.push_back(line);
-    }
-
-    file.close();
-    return integerStrings;
-}
-
 // Separate functions for each index
 void processIndexAlex() {
     // Placeholder for "alex"
@@ -118,18 +80,13 @@ int main(int argc, char* argv[]) {
     // display the config
     display_config(config);
 
-    // std::vector<int> integers = readIntegersFromFile(config.data_file);
-    std::vector<std::string> integerStrings =
-        readIntegersAsStringFromFile(config.data_file);
+    auto in_data = bliss::read_file<unsigned long>(config.data_file.c_str());
+
     // Call the respective function based on the index value
     if (config.index == "alex") {
-        processIndexAlex();
+        return 0;
     } else if (config.index == "lipp") {
-        processIndexLipp();
-    }
-
-    for (const std::string& str : integerStrings) {
-        std::cout << str << std::endl;
+        return 0;
     }
 
     return 0;

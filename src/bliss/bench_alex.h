@@ -13,9 +13,14 @@ class BlissAlexIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     alex::Alex<KEY_TYPE, VALUE_TYPE> _index;
     BlissAlexIndex() { _index = alex::Alex<KEY_TYPE, VALUE_TYPE>(); }
 
-    VALUE_TYPE get(KEY_TYPE key) { return _index.find(key); }
+    bool get(KEY_TYPE key) override {
+        auto it = _index.find(key);
+        return it != _index.end();
+    }
 
-    void put(KEY_TYPE key, VALUE_TYPE value) { _index.insert(key, value); }
+    void put(KEY_TYPE key, VALUE_TYPE value) override {
+        _index.insert(key, value);
+    }
 };
 
 }  // namespace bliss

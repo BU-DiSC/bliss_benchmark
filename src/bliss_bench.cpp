@@ -14,6 +14,7 @@
 
 typedef unsigned key_type;
 typedef unsigned value_type;
+
 using namespace bliss;
 
 struct BlissConfig {
@@ -81,7 +82,7 @@ void execute_inserts(BlissIndex<key_type, value_type> &tree,
 void workload_executor(BlissIndex<key_type, value_type> &tree,
                        std::vector<key_type> &data, const BlissConfig &conf) {
     unsigned num_inserts = data.size();
-    unsigned raw_queries = conf.raw_read_factor / 100.0 * num_inserts;
+    // unsigned raw_queries = conf.raw_read_factor / 100.0 * num_inserts;
     unsigned raw_writes = conf.raw_write_factor / 100.0 * num_inserts;
     unsigned mixed_size = conf.mixed_read_write_ratio / 100.0 * num_inserts;
     unsigned num_load = num_inserts - raw_writes - mixed_size;
@@ -90,13 +91,13 @@ void workload_executor(BlissIndex<key_type, value_type> &tree,
     std::mt19937 generator(rd());
     std::uniform_int_distribution<int> distribution(0, 1);
 
-    unsigned mix_inserts = 0;
-    unsigned mix_queries = 0;
-    uint32_t ctr_empty = 0;
-    value_type idx = 0;
-
-    auto it = data.cbegin();
-    key_type offset = 0;
+    // unsigned mix_inserts = 0;
+    // unsigned mix_queries = 0;
+    // uint32_t ctr_empty = 0;
+    // value_type idx = 0;
+    //
+    // auto it = data.cbegin();
+    // key_type offset = 0;
 
     spdlog::info("Preloading...");
     auto preload_time =
@@ -106,9 +107,9 @@ void workload_executor(BlissIndex<key_type, value_type> &tree,
 
     spdlog::info("Executing raw writes...");
 
-    auto raw_write_time = time_function([&]() {
-        execute_inserts(tree, data, raw_writes);
-    });  // TODO: this still needs to skip num_load entries btw
+    // auto raw_write_time = time_function([&]() {
+    //     execute_inserts(tree, data, raw_writes);
+    // });  // TODO: this still needs to skip num_load entries btw
 
     // std::cerr << "Mixed load (2*" << mixed_size << "/" << num_inserts <<
     // ")\n"; auto insert_time = start; auto query_time = start; while
@@ -155,14 +156,13 @@ int main(int argc, char *argv[]) {
 
     auto in_data = bliss::read_file<key_type>(config.data_file.c_str());
 
-    bliss::BlissIndex<key_type, value_type> index;
+    std::unique_ptr<BlissIndex<key_type, value_type>> index;
     // Call the respective function based on the index value
     if (config.index == "alex") {
-        index = bliss::BlissAlexIndex<key_type, value_type>();
-        // return 0;
+        index.reset(new BlissAlexIndex<key_type, value_type>());
     } else if (config.index == "lipp") {
         return 0;
     }
-    workload_executor(index, in_data, config);
+    workload_executor(*index, in_data, config);
     return 0;
 }

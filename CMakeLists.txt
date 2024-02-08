@@ -9,11 +9,8 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 add_subdirectory(external)
 
-option(DEBUG "Debug mode on or off" OFF)
-if(${DEBUG})
-    set(CMAKE_BUILD_TYPE "Debug")
-else()
-    set(CMAKE_BUILD_TYPE "Release")
+if(CMAKE_BUILD_TYPE STREQUAL Debug)        
+    ADD_DEFINITIONS(-DDEBUG)               
 endif()
 
 # =============================================================================
@@ -46,8 +43,7 @@ target_compile_options(bliss PUBLIC
     "-fstack-protector-strong"
     "-fexceptions"
     "-fasynchronous-unwind-tables"
-    $<$<BOOL:${DEBUG}>:-g2>
-    $<IF:$<BOOL:${DEBUG}>,-O0,-O2>
+    "-march=native"
 )
 
 target_include_directories(bliss PUBLIC

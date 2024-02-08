@@ -4,8 +4,6 @@
 
 #include <cxxopts.hpp>
 #include <iostream>
-#include <sstream>
-#include <stdexcept>
 #include <string>
 
 struct BlissConfig {
@@ -62,7 +60,7 @@ void display_config(BlissConfig config) {
     spdlog::info("Index: {}", config.index);
 }
 
-//read test file
+// read test file
 std::vector<int> readIntegersFromFile(const std::string& filename) {
     std::vector<int> integers;
     std::ifstream file(filename);
@@ -80,8 +78,9 @@ std::vector<int> readIntegersFromFile(const std::string& filename) {
     file.close();
     return integers;
 }
-//read integer as string
-std::vector<std::string> readIntegersAsStringFromFile(const std::string& filename) {
+// read integer as string
+std::vector<std::string> readIntegersAsStringFromFile(
+    const std::string& filename) {
     std::vector<std::string> integerStrings;
     std::ifstream file(filename);
 
@@ -92,7 +91,8 @@ std::vector<std::string> readIntegersAsStringFromFile(const std::string& filenam
 
     std::string line;
     while (std::getline(file, line)) {
-        // Optionally, you can add a check here to verify that the line is a valid integer
+        // Optionally, you can add a check here to verify that the line is a
+        // valid integer
         integerStrings.push_back(line);
     }
 
@@ -118,8 +118,9 @@ int main(int argc, char* argv[]) {
     // display the config
     display_config(config);
 
-    //std::vector<int> integers = readIntegersFromFile(config.data_file);
-    std::vector<std::string> integerStrings = readIntegersAsStringFromFile(config.data_file);
+    // std::vector<int> integers = readIntegersFromFile(config.data_file);
+    std::vector<std::string> integerStrings =
+        readIntegersAsStringFromFile(config.data_file);
     // Call the respective function based on the index value
     if (config.index == "alex") {
         processIndexAlex();
@@ -127,9 +128,6 @@ int main(int argc, char* argv[]) {
         processIndexLipp();
     }
 
-    //for (int i : integers) {
-    //std::cout << i << std::endl;
-    //}
     for (const std::string& str : integerStrings) {
         std::cout << str << std::endl;
     }

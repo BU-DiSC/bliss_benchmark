@@ -9,14 +9,53 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 add_subdirectory(external)
 
+if(CMAKE_BUILD_TYPE STREQUAL Debug)        
+    ADD_DEFINITIONS(-DDEBUG)               
+endif()
+
 # =============================================================================
 # HEADER bliss
-#   Executable and linking libraries
+#   Bliss lib files
 # =============================================================================
-add_executable(bliss src/bliss.cpp)
-target_link_libraries(bliss
+add_library(bliss OBJECT
+    ${CMAKE_SOURCE_DIR}/src/bliss/util/timer.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/util/reader.h
+)
+
+target_compile_features(bliss PUBLIC
+    cxx_std_11
+)
+
+target_link_libraries(bliss PUBLIC
     spdlog::spdlog
     cxxopts
     alex
     lipp
+)
+
+target_include_directories(bliss PUBLIC
+    ${CMAKE_SOURCE_DIR}/src
+)
+
+target_compile_options(bliss PUBLIC
+    "-Wall"
+    "-Wextra"
+    "-fstack-protector-strong"
+    "-fexceptions"
+    "-fasynchronous-unwind-tables"
+    "-march=native"
+)
+
+target_include_directories(bliss PUBLIC
+    ${CMAKE_SOURCE_DIR}/src
+)
+
+# =============================================================================
+# HEADER bliss
+#   Executable and linking libraries
+# =============================================================================
+add_executable(bliss_bench src/bliss_bench.cpp)
+
+target_link_libraries(bliss_bench PUBLIC
+    bliss
 )

@@ -53,14 +53,15 @@ BlissConfig parse_args(int argc, char *argv[]) {
             cxxopts::value<std::string>()->default_value("btree"));
 
         auto result = options.parse(argc, argv);
-        config = {result["data_file"].as<std::string>(),
-                  result["preload_factor"].as<double>(),
-                  result["write_factor"].as<double>(),
-                  result["read_factor"].as<double>(),
-                  result["mixed_read_write_ratio"].as<double>(),
-                  result["seed"].as<int>(),
-                  result["verbosity"].as<int>(),
-                  result["index"].as<std::string>()};
+        config = {.data_file = result["data_file"].as<std::string>(),
+                  .preload_factor = result["preload_factor"].as<double>(),
+                  .write_factor = result["write_factor"].as<double>(),
+                  .read_factor = result["read_factor"].as<double>(),
+                  .mixed_read_write_ratio =
+                      result["mixed_read_write_ratio"].as<double>(),
+                  .seed = result["seed"].as<int>(),
+                  .verbosity = result["verbosity"].as<int>(),
+                  .index = result["index"].as<std::string>()};
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
         std::cerr << options.help() << std::endl;

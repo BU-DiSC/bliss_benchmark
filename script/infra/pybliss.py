@@ -63,12 +63,10 @@ class BlissRunner:
         process = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
             universal_newlines=True,
             shell=True,
         )
-        proc_results, _ = process.communicate()
-        print(proc_results)
+        process.communicate()
 
         return True
 
@@ -83,7 +81,7 @@ class BlissRunner:
         seed: int = 0,
     ) -> Tuple[str, str, str, str]:
         if self.smoke_test:
-            res = tuple(str(random.randint(0, 10000)) for _ in range(4))
+            res = tuple(str(random.randint(0, 1000)) for _ in range(4))
             return (res[0], res[1], res[2], res[3])
 
         cmd = [
@@ -97,14 +95,13 @@ class BlissRunner:
             f"--seed {seed}",
         ]
         process = subprocess.Popen(
-            cmd,
+            " ".join(cmd),
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
             universal_newlines=True,
             shell=True,
         )
+        assert process.stdout is not None
         proc_results, _ = process.communicate()
-        print(proc_results)
 
         preload_time = self.preload_time_regex.search(proc_results)
         preload_time = preload_time.group(1) if preload_time else "0"

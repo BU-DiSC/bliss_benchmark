@@ -37,3 +37,5 @@ build
 
 # IDE
 .vscode/
+script/infra/__pycache__
+results.db

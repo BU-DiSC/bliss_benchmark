@@ -39,3 +39,4 @@ build
 .vscode/
 script/infra/__pycache__
 results.db
+data/*.data

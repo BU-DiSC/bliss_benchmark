@@ -4,6 +4,7 @@ import argparse
 import random
 from infra.db import BlissDB
 from infra.pybliss import BlissRunner
+from infra.pybods import PyBods
 
 NUM_EXPS = 1000
 K_CHOICES = [1, 2, 5, 10, 25, 50]
@@ -14,9 +15,9 @@ INDEXES = ["alex"]
 def main(args):
     bliss = BlissRunner(
         bliss_execute_path=args.bliss,
-        bods_execute_path=args.bods,
         smoke_test=args.smoke_test,
     )
+    _ = PyBods(bods_execute_path=args.bods, smoke_test=args.smoke_test)
     db = BlissDB(args.result_db)
 
     for _ in range(NUM_EXPS if not args.smoke_test else 10):
@@ -52,12 +53,12 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--bods",
-        type=str,
-        required=True,
-        help="path to bods executable",
-    )
+    # parser.add_argument(
+    #     "--bods",
+    #     type=str,
+    #     required=True,
+    #     help="path to bods executable",
+    # )
     parser.add_argument(
         "--bliss",
         type=str,

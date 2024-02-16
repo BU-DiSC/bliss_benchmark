@@ -1,10 +1,11 @@
 #include <alex.h>
 #include <lipp.h>
+#include <spdlog/common.h>
 #include <spdlog/spdlog.h>
 
 #include <cxxopts.hpp>
+#include <functional>
 #include <iostream>
-#include <iterator>
 #include <string>
 
 #include "bliss/bench_alex.h"
@@ -20,9 +21,11 @@ using namespace bliss;
 struct BlissConfig {
     std::string data_file;
     double preload_factor;
-    double raw_write_factor;
-    double raw_read_factor;
+    double write_factor;
+    double read_factor;
     double mixed_read_write_ratio;
+    int seed;
+    int verbosity;
     std::string index;
 };
 
@@ -36,24 +39,29 @@ BlissConfig parse_args(int argc, char *argv[]) {
                               cxxopts::value<std::string>())(
             "p,preload_factor", "Preload factor",
             cxxopts::value<double>()->default_value("0.5"))(
-            "w,raw_write_factor", "Raw write factor",
-            cxxopts::value<double>()->default_value("1.0"))(
-            "r,raw_read_factor", "Raw read factor",
+            "w,write_factor", "Write factor",
+            cxxopts::value<double>()->default_value("0.25"))(
+            "r,read_factor", "Read factor",
             cxxopts::value<double>()->default_value("0.1"))(
             "m,mixed_read_write_ratio", "Read write ratio",
             cxxopts::value<double>()->default_value("0.5"))(
+            "s,seed", "Random Seed value",
+            cxxopts::value<int>()->default_value("0"))(
+            "v,verbosity", "Verbosity [0: Info| 1: Debug | 2: Trace]",
+            cxxopts::value<int>()->default_value("0")->implicit_value("1"))(
             "i,index", "Index type (alex|lipp)",
             cxxopts::value<std::string>()->default_value("btree"));
 
         auto result = options.parse(argc, argv);
-        config.data_file = result["data_file"].as<std::string>();
-        config.preload_factor = result["preload_factor"].as<double>();
-        config.raw_write_factor = result["raw_write_factor"].as<double>();
-        config.raw_read_factor = result["raw_read_factor"].as<double>();
-        config.mixed_read_write_ratio =
-            result["mixed_read_write_ratio"].as<double>();
-        config.index = result["index"].as<std::string>();
-
+        config = {.data_file = result["data_file"].as<std::string>(),
+                  .preload_factor = result["preload_factor"].as<double>(),
+                  .write_factor = result["write_factor"].as<double>(),
+                  .read_factor = result["read_factor"].as<double>(),
+                  .mixed_read_write_ratio =
+                      result["mixed_read_write_ratio"].as<double>(),
+                  .seed = result["seed"].as<int>(),
+                  .verbosity = result["verbosity"].as<int>(),
+                  .index = result["index"].as<std::string>()};
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
         std::cerr << options.help() << std::endl;
@@ -63,95 +71,119 @@ BlissConfig parse_args(int argc, char *argv[]) {
 }
 
 void display_config(BlissConfig config) {
-    spdlog::info("Data File: {}", config.data_file);
-    spdlog::info("Preload Factor: {}", config.preload_factor);
-    spdlog::info("Raw Write Factor: {}", config.raw_write_factor);
-    spdlog::info("Raw Read Factor: {}", config.raw_read_factor);
-    spdlog::info("Read Write Ratio: {}", config.mixed_read_write_ratio);
-    spdlog::info("Index: {}", config.index);
+    spdlog::trace("Data File: {}", config.data_file);
+    spdlog::trace("Preload Factor: {}", config.preload_factor);
+    spdlog::trace("Write Factor: {}", config.write_factor);
+    spdlog::trace("Read Factor: {}", config.read_factor);
+    spdlog::trace("Read Write Ratio: {}", config.mixed_read_write_ratio);
+    spdlog::trace("Verbosity {}", config.verbosity);
+    spdlog::trace("Index: {}", config.index);
+}
+
+void execute_non_empty_reads(BlissIndex<key_type, value_type> &tree,
+                             std::vector<key_type> &data, int num_reads,
+                             std::function<double()> rng) {
+    size_t key_idx;
+    for (auto blank = 0; blank < num_reads; blank++) {
+        key_idx = std::round(rng() * data.size());
+        tree.get(data[key_idx]);
+    }
 }
 
 void execute_inserts(BlissIndex<key_type, value_type> &tree,
-                     std::vector<key_type> &data, unsigned num_load) {
-    // iterate through the data and insert into the tree
-    for (unsigned i = 0; i < num_load; i++) {
-        tree.put(data[i], data[i]);
+                     std::vector<key_type>::iterator &start,
+                     std::vector<key_type>::iterator &end) {
+    for (auto curr = start; curr != end; ++curr) {
+        tree.put(*curr, *curr);
+    }
+}
+
+void execute_mixed_workload(BlissIndex<key_type, key_type> &tree,
+                            std::vector<key_type>::iterator &start,
+                            std::vector<key_type>::iterator &end,
+                            double mixed_ratio, std::function<double()> rng) {
+    auto num_items = end - start;
+    auto num_reads = std::round(num_items * mixed_ratio);
+    auto num_writes = num_items - num_reads;
+    auto current = start;
+    bool stop_coin_flipping = false;
+    while (num_reads > 0 && num_writes > 0) {
+        if ((num_reads == 0 || stop_coin_flipping || rng() > 0.5) &&
+            num_writes > 0) {
+            tree.put(*current, *current);
+            num_writes--;
+            current++;
+        } else if (num_reads > 0) {
+            size_t key_idx = std::round(rng() * num_items);
+            tree.get(*(start + key_idx));
+            num_reads--;
+        } else {
+            // Number of reads is 0, but we coin flipped wrong, so stop flipping
+            stop_coin_flipping = true;
+        }
     }
 }
 
 void workload_executor(BlissIndex<key_type, value_type> &tree,
-                       std::vector<key_type> &data, const BlissConfig &conf) {
-    unsigned num_inserts = data.size();
-    // unsigned raw_queries = conf.raw_read_factor / 100.0 * num_inserts;
-    unsigned raw_writes = conf.raw_write_factor / 100.0 * num_inserts;
-    unsigned mixed_size = conf.mixed_read_write_ratio / 100.0 * num_inserts;
-    unsigned num_load = num_inserts - raw_writes - mixed_size;
-
-    std::random_device rd;
-    std::mt19937 generator(rd());
+                       std::vector<key_type> &data, const BlissConfig &config,
+                       const int seed) {
+    std::mt19937 generator(seed);
     std::uniform_int_distribution<int> distribution(0, 1);
 
-    // unsigned mix_inserts = 0;
-    // unsigned mix_queries = 0;
-    // uint32_t ctr_empty = 0;
-    // value_type idx = 0;
-    //
-    // auto it = data.cbegin();
-    // key_type offset = 0;
+    size_t num_inserts = data.size();
+    size_t num_preload = std::round(config.preload_factor * num_inserts);
+    size_t num_writes = std::round(config.write_factor * data.size());
+    size_t num_mixed = num_inserts - (num_preload + num_writes);
+    size_t num_reads = std::round(config.read_factor * data.size());
 
-    spdlog::info("Preloading...");
-    auto preload_time =
-        time_function([&]() { execute_inserts(tree, data, num_load); });
-
+    // Timing for preloading index
+    spdlog::debug("Preloading {} items", num_preload);
+    auto preload_start = data.begin();
+    auto preload_end = preload_start + num_preload;
+    auto preload_time = time_function(
+        [&]() { execute_inserts(tree, preload_start, preload_end); });
     spdlog::info("Preload Time (ns): {}", preload_time);
 
-    spdlog::info("Executing raw writes...");
+    // Timing for writes on index
+    spdlog::debug("Writing {} items", num_writes);
+    auto write_start = preload_end;
+    auto write_end = write_start + num_writes;
+    auto write_time =
+        time_function([&]() { execute_inserts(tree, write_start, write_end); });
+    spdlog::info("Write Time (ns): {}", write_time);
 
-    // auto raw_write_time = time_function([&]() {
-    //     execute_inserts(tree, data, raw_writes);
-    // });  // TODO: this still needs to skip num_load entries btw
+    // Timing for mixed workloads running
+    spdlog::debug("Running Mixed {} items", num_mixed);
+    auto mix_start = write_end;
+    auto mix_end = mix_start + num_mixed;
+    auto mix_time = time_function([&]() {
+        execute_mixed_workload(tree, mix_start, mix_end,
+                               config.mixed_read_write_ratio,
+                               [&]() { return distribution(generator); });
+    });
+    spdlog::info("Mix Time (ns): {}", mix_time);
 
-    // std::cerr << "Mixed load (2*" << mixed_size << "/" << num_inserts <<
-    // ")\n"; auto insert_time = start; auto query_time = start; while
-    // (mix_inserts < mixed_size || mix_queries < mixed_size) {
-    //     if (mix_queries >= mixed_size ||
-    //         (mix_inserts < mixed_size && distribution(generator))) {
-    //         auto _start = std::chrono::high_resolution_clock::now();
-    //         tree.put(*it++ + offset, idx++);
-    //         insert_time += std::chrono::high_resolution_clock::now() -
-    //         _start; mix_inserts++;
-    //     } else {
-    //         key_type query_index = generator() % idx + offset;
-    //         auto _start = std::chrono::high_resolution_clock::now();
-    //         key_type res = tree.get(query_index);
-    //         query_time += std::chrono::high_resolution_clock::now() - _start;
-    //         ctr_empty += !res;
-    //         mix_queries++;
-    //     }
-    // }
-    // duration = (insert_time - start);
-    // results << ", " << duration.count();
-    // duration = (query_time - start);
-    // results << ", " << duration.count();
-
-    // std::cerr << "Raw read (" << raw_queries << "/" << num_inserts << ")\n";
-    // std::uniform_int_distribution<unsigned> range_distribution(0,
-    //                                                            num_inserts -
-    //                                                            1);
-    // start = std::chrono::high_resolution_clock::now();
-    // for (unsigned int i = 0; i < raw_queries; i++) {
-    //     tree.get(data[range_distribution(generator) % data.size()] + offset);
-    // }
-    // duration = std::chrono::duration_cast<std::chrono::nanoseconds>(
-    //     std::chrono::high_resolution_clock::now() - start);
-    // results << ", " << duration.count();
+    // Timing for reads on index
+    spdlog::debug("Reading {} items", num_reads);
+    auto read_time = time_function([&]() {
+        execute_non_empty_reads(tree, data, num_reads,
+                                [&]() { return distribution(generator); });
+    });
+    spdlog::info("Read Time (ns): {}", read_time);
 }
 
 int main(int argc, char *argv[]) {
-    // bool index_set = false;
     auto config = parse_args(argc, argv);
-
-    // display the config
+    switch (config.verbosity) {
+        case 1:
+            spdlog::set_level(spdlog::level::debug);
+            break;
+        case 2:
+            spdlog::set_level(spdlog::level::trace);
+            break;
+        default:
+            spdlog::set_level(spdlog::level::info);
+    }
     display_config(config);
 
     auto in_data = bliss::read_file<key_type>(config.data_file.c_str());
@@ -163,6 +195,8 @@ int main(int argc, char *argv[]) {
     } else if (config.index == "lipp") {
         return 0;
     }
-    workload_executor(*index, in_data, config);
+
+    workload_executor(*index, in_data, config, 0);
+
     return 0;
 }

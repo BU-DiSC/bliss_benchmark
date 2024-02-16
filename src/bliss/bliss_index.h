@@ -11,4 +11,5 @@ class BlissIndex {
 };
 
 }  // namespace bliss
-#endif
+
+#endif // !BLISS_INDEX

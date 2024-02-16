@@ -20,6 +20,7 @@ endif()
 add_library(bliss OBJECT
     ${CMAKE_SOURCE_DIR}/src/bliss/util/timer.h
     ${CMAKE_SOURCE_DIR}/src/bliss/util/reader.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/bliss_index.h
 )
 
 target_compile_features(bliss PUBLIC

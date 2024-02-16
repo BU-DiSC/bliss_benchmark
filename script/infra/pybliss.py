@@ -4,7 +4,7 @@ import random
 from typing import Tuple
 
 
-class BlissRunner:
+class PyBliss:
     def __init__(
         self,
         bliss_execute_path: str,

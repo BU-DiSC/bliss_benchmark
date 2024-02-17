@@ -9,8 +9,8 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 add_subdirectory(external)
 
-if(CMAKE_BUILD_TYPE STREQUAL Debug)        
-    ADD_DEFINITIONS(-DDEBUG)               
+if(CMAKE_BUILD_TYPE STREQUAL Debug)
+    ADD_DEFINITIONS(-DDEBUG)
 endif()
 
 # =============================================================================
@@ -21,6 +21,8 @@ add_library(bliss OBJECT
     ${CMAKE_SOURCE_DIR}/src/bliss/util/timer.h
     ${CMAKE_SOURCE_DIR}/src/bliss/util/reader.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bliss_index.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/bench_lipp.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/bench_alex.h
 )
 
 target_compile_features(bliss PUBLIC

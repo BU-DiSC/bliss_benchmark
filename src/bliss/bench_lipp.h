@@ -10,7 +10,7 @@ namespace bliss {
 template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissLippIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
-    LIPP<int, int> _index;
+    LIPP<KEY_TYPE, VALUE_TYPE> _index;
     BlissLippIndex() : _index() {};
 
     bool get(KEY_TYPE key) override {

@@ -9,7 +9,6 @@
 #include <string>
 
 #include "bliss/bench_alex.h"
-#include "bliss/bench_lipp.h"
 #include "bliss/bliss_index.h"
 #include "bliss/util/reader.h"
 #include "bliss/util/timer.h"
@@ -194,7 +193,7 @@ int main(int argc, char *argv[]) {
     if (config.index == "alex") {
         index.reset(new BlissAlexIndex<key_type, value_type>());
     } else if (config.index == "lipp") {
-        index.reset(new BlissLippIndex<key_type, value_type>());
+        return 0;
     }
 
     workload_executor(*index, in_data, config, 0);

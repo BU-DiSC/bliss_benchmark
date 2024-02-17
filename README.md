@@ -8,7 +8,7 @@ This research project is part of the [Data-intensive Systems and Computing (DiSC
 3.  [ALEX](https://github.com/microsoft/ALEX)
 4.  [LIPP](https://github.com/Jiacheng-WU/lipp)
 
-## How to compile
+## How to Compile
 1. Clone this repo\
 `git clone https://github.com/BU-DiSC/bliss_benchmark.git`
 

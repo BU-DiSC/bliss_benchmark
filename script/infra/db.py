@@ -11,6 +11,7 @@ class BlissDB:
             CREATE TABLE IF NOT EXISTS bliss_bench (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 time_stamp TXT,
+                file_name TXT,
                 k_pt REAL,
                 l_pt REAL,
                 index_type TEXT,
@@ -25,6 +26,7 @@ class BlissDB:
 
     def log_row(
         self,
+        file_name: str,
         k_pt: float,
         l_pt: float,
         index: str,
@@ -37,12 +39,13 @@ class BlissDB:
         cursor.execute(
             """
                INSERT INTO bliss_bench (
-                   time_stamp, k_pt, l_pt, index_type, preload_time,
+                   time_stamp, file_name, k_pt, l_pt, index_type, preload_time,
                    write_time, mixed_time, read_time
-               ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+               ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
             """,
             (
                 datetime.now(timezone.utc),
+                file_name,
                 k_pt,
                 l_pt,
                 index,

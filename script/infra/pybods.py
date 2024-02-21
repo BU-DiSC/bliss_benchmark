@@ -24,6 +24,7 @@ class PyBods:
         seed: int = 0,  # random seed
         start_idx: int = 0,  # start index
         fixed: bool = False,  # fixed window size
+        binary_file_format: bool = False,
     ):
         if self.smoke_test:
             return True
@@ -42,6 +43,7 @@ class PyBods:
             f"--start {start_idx}",
             f"--seed {seed}",
             f"--fixed" if fixed else "",
+            f"--binary" if binary_file_format else "",
         ]
         process = subprocess.Popen(
             " ".join(cmd),

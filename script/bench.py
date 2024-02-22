@@ -10,7 +10,8 @@ from infra.pybliss import PyBliss
 K_CHOICES = [1, 3, 5, 10, 25, 50]
 L_CHOICES = [1, 3, 5, 10, 25, 50]
 SPECIAL_KL = ((0, 0), (100, 100))
-INDEXES = ["alex"]
+INDEXES = ["alex", "lipp"]
+
 
 def get_file_params(file_name):
     file_regex_str = r"data_N(\d+)_k(\d+)_l(\d+)\.bin"
@@ -33,7 +34,7 @@ def main(args):
 
     for file, index in exp_pairs:
         _, k_pt, l_pt = get_file_params(file)
-        logging.info("Running bliss ({}, {})", index, file)
+        logging.info(f"Running bliss ({index}, {file})")
         result = bliss.run_single_bliss_bench(
             data_file=os.path.join(args.data_folder, file),
             index=index,
@@ -55,7 +56,8 @@ def main(args):
             read_time=result[3],
         )
 
-    db.display_last_rows(10)
+    for row in db.get_last_rows(10):
+        logging.info(f"Row: {row}")
 
 
 if __name__ == "__main__":
@@ -67,10 +69,7 @@ if __name__ == "__main__":
         help="path to bliss executable",
     )
     parser.add_argument(
-        "--data_folder",
-        type=str,
-        required=True,
-        help="Folder containing workload"
+        "--data_folder", type=str, required=True, help="Folder containing workload"
     )
     parser.add_argument(
         "--result_db",
@@ -85,8 +84,25 @@ if __name__ == "__main__":
         default=False,
         help="Smoke test",
     )
+    parser.add_argument(
+        "--verbose",
+        "-v",
+        action="count",
+        help="Verbosity logging",
+        default=0,
+    )
 
     args = parser.parse_args()
+    log_level = logging.WARNING
+    if args.verbose == 1:
+        log_level = logging.INFO
+    elif args.verbose > 1:
+        log_level = logging.DEBUG
+    logging.basicConfig(
+        format="[%(levelname)s][%(asctime)-15s][%(filename)s] %(message)s",
+        datefmt="%d-%m-%y:%H:%M:%S",
+        level=log_level,
+    )
     main(args)
 
     pass

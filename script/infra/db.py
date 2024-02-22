@@ -1,3 +1,4 @@
+import logging
 import sqlite3
 from datetime import datetime, timezone
 
@@ -57,7 +58,7 @@ class BlissDB:
         )
         self.db_con.commit()
 
-    def display_last_rows(self, num_rows: int = 10) -> None:
+    def get_last_rows(self, num_rows: int = 10):
         cursor = self.db_con.cursor()
         rows = cursor.execute(
             """
@@ -65,5 +66,4 @@ class BlissDB:
             """,
             (num_rows,),
         )
-        for row in rows:
-            print(row)
+        return rows.fetchall()

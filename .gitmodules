@@ -1,3 +1,7 @@
 [submodule "external/bods"]
 	path = external/bods
 	url = git@github.com:BU-DiSC/bods.git
+[submodule "external/rocksdb"]
+	path = external/rocksdb
+	url = git@github.com:BU-DiSC/rocksdb.git
+	branch = sortedness

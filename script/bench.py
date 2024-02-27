@@ -115,5 +115,3 @@ if __name__ == "__main__":
         level=log_level,
     )
     main(args)
-
-    pass

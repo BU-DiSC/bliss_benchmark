@@ -35,6 +35,7 @@ class PyBliss:
         mixed_ratio: float,
         seed: int = 0,
         binary: bool = False,
+        use_preload: bool = False,
     ) -> Tuple[str, str, str, str]:
         if self.smoke_test:
             res = tuple(str(random.randint(0, 1000)) for _ in range(4))
@@ -50,6 +51,7 @@ class PyBliss:
             f"--mixed_read_write_ratio {mixed_ratio}",
             f"--seed {seed}",
             f"--file_type {'binary' if binary else 'txt'}",
+            f"--use_preload" if use_preload else "",
         ]
         process = subprocess.Popen(
             " ".join(cmd),

@@ -11,6 +11,11 @@ K_CHOICES = [1, 3, 5, 10, 25, 50]
 L_CHOICES = [1, 3, 5, 10, 25, 50]
 SPECIAL_KL = ((0, 0), (100, 100))
 INDEXES = ["alex", "lipp"]
+PRELOAD_FACTOR = 0.5
+WRITE_FACTOR = 0.25
+READ_FACTOR = 0.25
+MIXED_RATIO = 0.5
+PRELOAD = False
 
 
 def get_file_params(file_name):
@@ -38,12 +43,13 @@ def main(args):
         result = bliss.run_single_bliss_bench(
             data_file=os.path.join(args.data_folder, file),
             index=index,
-            preload_factor=0.5,  # TODO: Decide on how we want to pick these
-            write_factor=0.25,
-            read_factor=0.25,
-            mixed_ratio=0.5,
+            preload_factor=PRELOAD_FACTOR,  # TODO: Decide on how we want to pick these
+            write_factor=WRITE_FACTOR,
+            read_factor=READ_FACTOR,
+            mixed_ratio=MIXED_RATIO,
             seed=0,
             binary=True,
+            use_preload=PRELOAD,
         )
         db.log_row(
             file_name=file,
@@ -54,6 +60,11 @@ def main(args):
             write_time=result[1],
             mixed_time=result[2],
             read_time=result[3],
+            preload_factor=PRELOAD_FACTOR,
+            write_factor=WRITE_FACTOR,
+            read_factor=READ_FACTOR,
+            mixed_ratio=MIXED_RATIO,
+            use_preload=PRELOAD,
         )
 
     for row in db.get_last_rows(10):

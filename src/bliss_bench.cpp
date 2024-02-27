@@ -4,7 +4,6 @@
 #include <spdlog/spdlog.h>
 
 #include <cxxopts.hpp>
-#include <functional>
 #include <iostream>
 #include <string>
 
@@ -27,6 +26,7 @@ struct BlissConfig {
     int verbosity;
     std::string index;
     std::string file_type;
+    bool use_preload;
 };
 
 BlissConfig parse_args(int argc, char *argv[]) {
@@ -52,19 +52,23 @@ BlissConfig parse_args(int argc, char *argv[]) {
             "i,index", "Index type [alex | lipp | btree | bepstree | lsm]",
             cxxopts::value<std::string>()->default_value("btree"))(
             "file_type", "Input file type [binary | txt]",
-            cxxopts::value<std::string>()->default_value("txt"));
+            cxxopts::value<std::string>()->default_value("txt"))(
+            "use_preload", "Use index defined preload",
+            cxxopts::value<bool>()->default_value("false"));
 
         auto result = options.parse(argc, argv);
-        config = {.data_file = result["data_file"].as<std::string>(),
-                  .preload_factor = result["preload_factor"].as<double>(),
-                  .write_factor = result["write_factor"].as<double>(),
-                  .read_factor = result["read_factor"].as<double>(),
-                  .mixed_read_write_ratio =
-                      result["mixed_read_write_ratio"].as<double>(),
-                  .seed = result["seed"].as<int>(),
-                  .verbosity = result["verbosity"].as<int>(),
-                  .index = result["index"].as<std::string>(),
-                  .file_type = result["file_type"].as<std::string>()
+        config = {
+            .data_file = result["data_file"].as<std::string>(),
+            .preload_factor = result["preload_factor"].as<double>(),
+            .write_factor = result["write_factor"].as<double>(),
+            .read_factor = result["read_factor"].as<double>(),
+            .mixed_read_write_ratio =
+                result["mixed_read_write_ratio"].as<double>(),
+            .seed = result["seed"].as<int>(),
+            .verbosity = result["verbosity"].as<int>(),
+            .index = result["index"].as<std::string>(),
+            .file_type = result["file_type"].as<std::string>(),
+            .use_preload = result["use_preload"].as<bool>(),
         };
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
@@ -87,39 +91,54 @@ void display_config(BlissConfig config) {
 
 void execute_non_empty_reads(bliss::BlissIndex<key_type, value_type> &tree,
                              std::vector<key_type> &data, int num_reads,
-                             std::function<double()> rng) {
+                             int seed = 0) {
+    std::mt19937 gen(seed);
+    std::uniform_int_distribution<int> dist(0, 1);
+
     size_t key_idx;
     for (auto blank = 0; blank < num_reads; blank++) {
-        key_idx = std::round(rng() * (data.size() - 1));
+        key_idx = std::round(dist(gen) * (data.size() - 1));
         tree.get(data.at(key_idx));
     }
+}
+void execute_preload(bliss::BlissIndex<key_type, value_type> &tree,
+                     std::vector<key_type>::iterator &start,
+                     std::vector<key_type>::iterator &end) {
+    tree.preload(start, end, 0);
 }
 
 void execute_inserts(bliss::BlissIndex<key_type, value_type> &tree,
                      std::vector<key_type>::iterator &start,
-                     std::vector<key_type>::iterator &end) {
-    for (auto curr = start; curr != end; ++curr) {
-        tree.put(*curr, *curr);
+                     std::vector<key_type>::iterator &end, int seed = 0) {
+    std::mt19937 gen(seed);
+    std::uniform_int_distribution<value_type> dist(0, 1);
+
+    auto num_keys = end - start;
+    for (auto &curr = start; curr != end; ++curr) {
+        tree.put(*curr, std::round(dist(gen) * num_keys));
     }
 }
 
 void execute_mixed_workload(bliss::BlissIndex<key_type, key_type> &tree,
                             std::vector<key_type>::iterator &start,
                             std::vector<key_type>::iterator &end,
-                            double mixed_ratio, std::function<double()> rng) {
+                            double mixed_ratio, int seed = 0) {
+    std::mt19937 gen(seed);
+    std::uniform_int_distribution<int> dist(0, 1);
+
     auto num_items = end - start;
     auto num_reads = std::round(num_items * mixed_ratio);
     auto num_writes = num_items - num_reads;
     auto current = start;
     bool stop_coin_flipping = false;
     while (num_reads > 0 && num_writes > 0) {
-        if ((num_reads == 0 || stop_coin_flipping || rng() > 0.5) &&
+        if ((num_reads == 0 || stop_coin_flipping || dist(gen) > 0.5) &&
             num_writes > 0) {
             tree.put(*current, *current);
             num_writes--;
             current++;
         } else if (num_reads > 0) {
-            size_t key_idx = std::round(rng() * num_items);
+            size_t key_idx = std::round(dist(gen) * num_items);
             tree.get(*(start + key_idx));
             num_reads--;
         } else {
@@ -132,9 +151,6 @@ void execute_mixed_workload(bliss::BlissIndex<key_type, key_type> &tree,
 void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
                        std::vector<key_type> &data, const BlissConfig &config,
                        const int seed) {
-    std::mt19937 generator(seed);
-    std::uniform_int_distribution<int> distribution(0, 1);
-
     size_t num_inserts = data.size();
     size_t num_preload = std::round(config.preload_factor * num_inserts);
     size_t num_writes = std::round(config.write_factor * data.size());
@@ -145,8 +161,14 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
     spdlog::debug("Preloading {} items", num_preload);
     auto preload_start = data.begin();
     auto preload_end = preload_start + num_preload;
-    auto preload_time = time_function(
-        [&]() { execute_inserts(tree, preload_start, preload_end); });
+    unsigned long long preload_time;
+    if (config.use_preload) {
+        preload_time = time_function(
+            [&]() { execute_preload(tree, preload_start, preload_end); });
+    } else {
+        preload_time = time_function(
+            [&]() { execute_inserts(tree, preload_start, preload_end); });
+    }
     spdlog::info("Preload Time (ns): {}", preload_time);
 
     // Timing for writes on index
@@ -163,17 +185,14 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
     auto mix_end = mix_start + num_mixed;
     auto mix_time = time_function([&]() {
         execute_mixed_workload(tree, mix_start, mix_end,
-                               config.mixed_read_write_ratio,
-                               [&]() { return distribution(generator); });
+                               config.mixed_read_write_ratio, seed);
     });
     spdlog::info("Mix Time (ns): {}", mix_time);
 
     // Timing for reads on index
     spdlog::debug("Reading {} items", num_reads);
-    auto read_time = time_function([&]() {
-        execute_non_empty_reads(tree, data, num_reads,
-                                [&]() { return distribution(generator); });
-    });
+    auto read_time = time_function(
+        [&]() { execute_non_empty_reads(tree, data, num_reads, seed); });
     spdlog::info("Read Time (ns): {}", read_time);
 }
 
@@ -198,7 +217,8 @@ int main(int argc, char *argv[]) {
         data = bliss::read_file<key_type>(config.data_file.c_str());
     }
     spdlog::debug("data.at(0) = {}", data.at(0));
-    spdlog::debug("data.at({}) = {}", data.size() - 1, data.at(data.size() - 1));
+    spdlog::debug("data.at({}) = {}", data.size() - 1,
+                  data.at(data.size() - 1));
 
     std::unique_ptr<bliss::BlissIndex<key_type, value_type>> index;
     // Call the respective function based on the index value

@@ -3,9 +3,10 @@ import os
 import argparse
 from infra.pybods import PyBods
 
+# K_CHOICES = [1, 3, 5, 10, 25, 50]
 K_CHOICES = [1, 3, 5, 10, 25, 50]
-L_CHOICES = [1, 3, 5, 10, 25, 50]
-SPECIAL_KL = ((0, 0), (100, 100))
+L_CHOICES = [100]
+# SPECIAL_KL = ((0, 0), (100, 100))
 
 NUM_KEYS = 500_000_000
 DOMAIN_SIZE = 500_000_000
@@ -59,27 +60,27 @@ def main(args):
         )
         print(results)
 
-    for k_pt, l_pt in SPECIAL_KL:
-        file_name = create_file_str(
-            num_entry=NUM_KEYS,
-            k=k_pt,
-            l=l_pt,
-            binary=BINARY_FILE_FORMAT
-        )
-        results = bods.gen_data(
-            output_file=os.path.join(args.output_folder, file_name),
-            num_entry=NUM_KEYS,
-            k=k_pt,
-            l=l_pt,
-            alpha=ALPHA,
-            beta=BETA,
-            domain=DOMAIN_SIZE,
-            window_size=WINDOW,
-            payload=PAYLOAD,
-            seed=SEED,
-            binary_file_format=BINARY_FILE_FORMAT,
-        )
-        print(results)
+    # for k_pt, l_pt in SPECIAL_KL:
+    #     file_name = create_file_str(
+    #         num_entry=NUM_KEYS,
+    #         k=k_pt,
+    #         l=l_pt,
+    #         binary=BINARY_FILE_FORMAT
+    #     )
+    #     results = bods.gen_data(
+    #         output_file=os.path.join(args.output_folder, file_name),
+    #         num_entry=NUM_KEYS,
+    #         k=k_pt,
+    #         l=l_pt,
+    #         alpha=ALPHA,
+    #         beta=BETA,
+    #         domain=DOMAIN_SIZE,
+    #         window_size=WINDOW,
+    #         payload=PAYLOAD,
+    #         seed=SEED,
+    #         binary_file_format=BINARY_FILE_FORMAT,
+    #     )
+    #     print(results)
 
 
 if __name__ == "__main__":

@@ -1,4 +1,3 @@
-import logging
 import sqlite3
 from datetime import datetime, timezone
 
@@ -15,11 +14,16 @@ class BlissDB:
                 file_name TXT,
                 k_pt REAL,
                 l_pt REAL,
+                preload_factor REAL,
+                write_factor REAL,
+                read_factor REAL,
+                mixed_ratio REAL,
                 index_type TEXT,
                 preload_time INT,
                 write_time INT,
                 mixed_time INT,
-                read_time INT
+                read_time INT,
+                use_preload INT
             );
             """
         )
@@ -35,14 +39,20 @@ class BlissDB:
         write_time: str,
         mixed_time: str,
         read_time: str,
+        preload_factor: float,
+        write_factor: float,
+        read_factor: float,
+        mixed_ratio: float,
+        use_preload: bool,
     ) -> None:
         cursor = self.db_con.cursor()
         cursor.execute(
             """
                INSERT INTO bliss_bench (
                    time_stamp, file_name, k_pt, l_pt, index_type, preload_time,
-                   write_time, mixed_time, read_time
-               ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+                   write_time, mixed_time, read_time, preload_factor,
+                   write_factor, read_factor, mixed_ratio, use_preload
+               ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
             """,
             (
                 datetime.now(timezone.utc),
@@ -54,6 +64,11 @@ class BlissDB:
                 write_time,
                 mixed_time,
                 read_time,
+                preload_factor,
+                write_factor,
+                read_factor,
+                mixed_ratio,
+                use_preload
             ),
         )
         self.db_con.commit()

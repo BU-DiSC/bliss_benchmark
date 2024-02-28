@@ -3,8 +3,6 @@
 
 #include <lipp.h>
 
-#include <random>
-
 #include "bliss/bliss_index.h"
 
 namespace bliss {
@@ -15,20 +13,8 @@ class BlissLippIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     LIPP<KEY_TYPE, VALUE_TYPE> _index;
     BlissLippIndex() : _index(){};
 
-    void preload(typename std::vector<KEY_TYPE>::iterator &start,
-                 typename std::vector<KEY_TYPE>::iterator &end,
-                 int seed = 0) override {
-        auto num_keys = end - start;
-        std::mt19937 generator(seed);
-        std::uniform_int_distribution<int> distribution(0, 1);
-        std::pair<KEY_TYPE, VALUE_TYPE> values[num_keys];
-        size_t idx = 0;
-        for (auto curr = start; curr != end; ++curr) {
-            values[idx].first = *curr;
-            values[idx].second = distribution(generator);
-            idx++;
-        }
-        this->_index.bulk_load(values, num_keys);
+    void preload(std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values) override {
+        this->_index.bulk_load(values.data(), values.size());
     }
 
     bool get(KEY_TYPE key) override {

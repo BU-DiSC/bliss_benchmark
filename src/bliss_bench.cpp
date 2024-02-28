@@ -5,6 +5,7 @@
 
 #include <cxxopts.hpp>
 #include <iostream>
+#include <limits>
 #include <string>
 
 #include "bliss/bench_alex.h"
@@ -101,15 +102,38 @@ void execute_non_empty_reads(bliss::BlissIndex<key_type, value_type> &tree,
         tree.get(data.at(key_idx));
     }
 }
+
+std::vector<std::pair<key_type, value_type>> create_preload_vec(
+    std::vector<key_type>::iterator &start,
+    std::vector<key_type>::iterator &end, bool sort_values = true,
+    int value_generator_seed = 0) {
+    std::mt19937 gen(value_generator_seed);
+    std::uniform_int_distribution<key_type> dist(0, 2 << 16);
+    std::vector<std::pair<key_type, value_type>> vec;
+
+    if (sort_values) {
+        spdlog::trace("Sorting values");
+        std::stable_sort(start, end);
+    }
+
+    spdlog::trace("Creating key-value pairs");
+    for (auto curr = start; curr != end; ++curr) {
+        vec.push_back(std::make_pair(*curr, dist(gen)));
+    }
+
+    return vec;
+}
+
 void execute_preload(bliss::BlissIndex<key_type, value_type> &tree,
-                     std::vector<key_type>::iterator &start,
-                     std::vector<key_type>::iterator &end) {
-    tree.preload(start, end, 0);
+                     std::vector<std::pair<key_type, value_type>> &values) {
+    spdlog::trace("Preloading values");
+    tree.preload(values);
 }
 
 void execute_inserts(bliss::BlissIndex<key_type, value_type> &tree,
                      std::vector<key_type>::iterator &start,
                      std::vector<key_type>::iterator &end, int seed = 0) {
+    spdlog::trace("Executing Inserts");
     std::mt19937 gen(seed);
     std::uniform_int_distribution<value_type> dist(0, 1);
 
@@ -162,13 +186,26 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
     auto preload_start = data.begin();
     auto preload_end = preload_start + num_preload;
     unsigned long long preload_time;
+    unsigned long long preload_creation_time;
     if (config.use_preload) {
-        preload_time = time_function(
-            [&]() { execute_preload(tree, preload_start, preload_end); });
+        auto start = std::chrono::high_resolution_clock::now();
+        auto vec = create_preload_vec(preload_start, preload_end);
+        preload_creation_time =
+            std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::high_resolution_clock::now() - start)
+                .count();
+        preload_time = time_function([&]() { execute_preload(tree, vec); });
     } else {
+        auto start = std::chrono::high_resolution_clock::now();
+        auto vec = create_preload_vec(preload_start, preload_end, false);
+        preload_creation_time =
+            std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::high_resolution_clock::now() - start)
+                .count();
         preload_time = time_function(
             [&]() { execute_inserts(tree, preload_start, preload_end); });
     }
+    spdlog::info("Preload Creation Time (ns): {}", preload_creation_time);
     spdlog::info("Preload Time (ns): {}", preload_time);
 
     // Timing for writes on index

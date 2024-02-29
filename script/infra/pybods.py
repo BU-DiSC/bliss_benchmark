@@ -1,4 +1,23 @@
+from dataclasses import dataclass
 import subprocess
+from typing import Optional
+
+
+@dataclass
+class BodsArgs:
+    output_file: str
+    total_entries: int
+    k_pt: float
+    l_pt: float
+    alpha: int = 1
+    beta: int = 1
+    domain: Optional[int] = None
+    window_size: int = 1
+    payload: int = 0
+    seed: int = 0
+    start_idx: int = 0
+    fixed: bool = False
+    binary_file_format: bool = False
 
 
 class PyBods:
@@ -12,39 +31,30 @@ class PyBods:
 
     def gen_data(
         self,
-        output_file: str,  # file to store data
-        num_entry: int,  # total number of entries
-        k: float,  # % of out of order entries
-        l: float,  # % max displacement of entries
-        alpha: float,  # beta dist arg1
-        beta: float,  # beta dist arg2
-        domain: float,  # right half of key space [0, domain)
-        window_size: int,  # size of skips
-        payload: int,  # payload in BYTES
-        seed: int = 0,  # random seed
-        start_idx: int = 0,  # start index
-        fixed: bool = False,  # fixed window size
-        binary_file_format: bool = False,
-    ):
+        args: BodsArgs,
+    ) -> str:
         if self.smoke_test:
-            return True
+            return "Smoke test"
 
         cmd = [
             self.bods_execute_path,
-            f"--output_file {output_file}",
-            f"--total_entries {num_entry}",
-            f"--k_pt {k}",
-            f"--l_pt {l}",
-            f"--alpha {alpha}",
-            f"--beta {beta}",
-            f"--domain {domain}",
-            f"--window {window_size}",
-            f"--payload {payload}",
-            f"--start {start_idx}",
-            f"--seed {seed}",
-            f"--fixed" if fixed else "",
-            f"--binary" if binary_file_format else "",
+            f"--output_file {args.output_file}",
+            f"--total_entries {args.total_entries}",
+            f"--k_pt {args.k_pt}",
+            f"--l_pt {args.l_pt}",
+            f"--alpha {args.alpha}",
+            f"--beta {args.beta}",
+            f"--domain {args.domain if args.domain is not None else args.total_entries}",
+            f"--window {args.window_size}",
+            f"--payload {args.payload}",
+            f"--start {args.start_idx}",
+            f"--seed {args.seed}",
         ]
+        if args.binary_file_format:
+            cmd.append("--binary")
+        if args.fixed:
+            cmd.append("--fixed")
+        print(" ".join(cmd))
         process = subprocess.Popen(
             " ".join(cmd),
             stdout=subprocess.PIPE,
@@ -54,4 +64,3 @@ class PyBods:
         res, _ = process.communicate()
 
         return res
-

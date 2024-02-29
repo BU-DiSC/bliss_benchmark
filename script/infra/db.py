@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import datetime, timezone
+from .pybliss import BlissArgs, BlissStats
 
 
 class BlissDB:
@@ -12,18 +13,19 @@ class BlissDB:
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 time_stamp TXT,
                 file_name TXT,
+                index_type TEXT,
                 k_pt REAL,
                 l_pt REAL,
                 preload_factor REAL,
                 write_factor REAL,
                 read_factor REAL,
                 mixed_ratio REAL,
-                index_type TEXT,
+                use_preload INT
                 preload_time INT,
+                preload_creation_time INT,
                 write_time INT,
                 mixed_time INT,
                 read_time INT,
-                use_preload INT
             );
             """
         )
@@ -31,44 +33,48 @@ class BlissDB:
 
     def log_row(
         self,
-        file_name: str,
         k_pt: float,
         l_pt: float,
-        index: str,
-        preload_time: str,
-        write_time: str,
-        mixed_time: str,
-        read_time: str,
-        preload_factor: float,
-        write_factor: float,
-        read_factor: float,
-        mixed_ratio: float,
-        use_preload: bool,
+        args: BlissArgs,
+        stats: BlissStats,
     ) -> None:
         cursor = self.db_con.cursor()
         cursor.execute(
             """
                INSERT INTO bliss_bench (
-                   time_stamp, file_name, k_pt, l_pt, index_type, preload_time,
-                   write_time, mixed_time, read_time, preload_factor,
-                   write_factor, read_factor, mixed_ratio, use_preload
-               ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+                   time_stamp,
+                   file_name,
+                   index_type,
+                   k_pt,
+                   l_pt,
+                   preload_factor,
+                   write_factor,
+                   read_factor,
+                   mixed_ratio,
+                   use_preload
+                   preload_time,
+                   preload_creation_time,
+                   write_time,
+                   mixed_time,
+                   read_time,
+               ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
             """,
             (
                 datetime.now(timezone.utc),
-                file_name,
+                args.data_file,
+                args.index_type,
                 k_pt,
                 l_pt,
-                index,
-                preload_time,
-                write_time,
-                mixed_time,
-                read_time,
-                preload_factor,
-                write_factor,
-                read_factor,
-                mixed_ratio,
-                use_preload
+                args.preload_factor,
+                args.write_factor,
+                args.read_factor,
+                args.mixed_ratio,
+                args.use_preload,
+                stats.preload_time,
+                stats.preload_creation_time,
+                stats.write_time,
+                stats.mixed_time,
+                stats.read_time,
             ),
         )
         self.db_con.commit()

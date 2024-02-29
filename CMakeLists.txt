@@ -4,14 +4,35 @@ project(bliss_benchmark VERSION 1.0
                         LANGUAGES CXX
 )
 
+include(ExternalProject)
+message(STATUS "CXX : ${CMAKE_CXX_COMPILER}")
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
-
-add_subdirectory(external)
 
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
     ADD_DEFINITIONS(-DDEBUG)
 endif()
+
+# =============================================================================
+# HEADER git-submodules
+# =============================================================================
+find_package(Git QUIET)
+if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        RESULT_VARIABLE GIT_SUBMOD_RESULT
+    )
+    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+        message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+    endif()
+endif()
+
+# =============================================================================
+# HEADER external
+#   add external libs (after git submodule init)
+# =============================================================================
+add_subdirectory(external)
 
 # =============================================================================
 # HEADER bliss
@@ -26,7 +47,7 @@ add_library(bliss OBJECT
 )
 
 target_compile_features(bliss PUBLIC
-    cxx_std_11
+    cxx_std_17
 )
 
 target_link_libraries(bliss PUBLIC

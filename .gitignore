@@ -194,4 +194,4 @@ build
 script/infra/__pycache__
 results.db
 data/*.data
-data/*.bin
+*.bin

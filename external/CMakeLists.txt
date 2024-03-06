@@ -70,4 +70,4 @@ if (NOT tlx_POPULATED)
 endif()
 
 add_library(tlx INTERFACE)
-target_include_directories(tlx INTERFACE ${tlx_SOURCE_DIR}/tlx/container)
+target_include_directories(tlx INTERFACE ${tlx_SOURCE_DIR}/)

@@ -10,6 +10,7 @@
 
 #include "bliss/bench_alex.h"
 #include "bliss/bench_lipp.h"
+#include "bliss/bench_btree.h"
 #include "bliss/bliss_index.h"
 #include "bliss/util/reader.h"
 #include "bliss/util/timer.h"
@@ -263,6 +264,8 @@ int main(int argc, char *argv[]) {
         index.reset(new bliss::BlissAlexIndex<key_type, value_type>());
     } else if (config.index == "lipp") {
         index.reset(new bliss::BlissLippIndex<key_type, value_type>());
+    } else if (config.index == "btree"){
+        index.reset(new bliss::BlissBTreeIndex<key_type, value_type>());
     } else {
         spdlog::error("{} not implemented yet", config.index);
     }

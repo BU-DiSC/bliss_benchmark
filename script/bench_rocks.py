@@ -130,6 +130,8 @@ class PyRocks:
         )
         res, _ = process.communicate()
         logging.debug(res)
+        with open(input_file + ".log", "w") as fid:
+            fid.write(res)
 
         ingestion_time = self.ingestion_time_prog.search(res)
         ingestion_time = int(ingestion_time.group(1)) if ingestion_time else 0

@@ -15,7 +15,7 @@ PRELOAD_FACTOR = 0.4
 WRITE_FACTOR = 0.4
 READ_FACTOR = 0.2
 MIXED_RATIO = 0.5
-PRELOAD = True
+PRELOAD = False
 
 
 def main(args):
@@ -38,6 +38,7 @@ def main(args):
             seed=0,
             use_preload=PRELOAD,
         )
+        logging.debug(f"BlissArgs: {bliss_args}")
         stats = bliss.run_single_bliss_bench(bliss_args)
         db.log_row(k_pt, l_pt, bliss_args, stats)
 
@@ -78,6 +79,7 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
+
     log_level = logging.WARNING
     if args.verbose == 1:
         log_level = logging.INFO
@@ -86,6 +88,7 @@ if __name__ == "__main__":
     logging.basicConfig(
         format="[%(levelname)s][%(asctime)-15s][%(filename)s] %(message)s",
         datefmt="%d-%m-%y:%H:%M:%S",
-        level=log_level,
+        level=log_level
     )
+    logging.info(f"Logger level: {logging.getLevelName(log_level)}")
     main(args)

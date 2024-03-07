@@ -22,9 +22,7 @@ class BlissBTreeIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
         });
 
         // Insert sorted values into the B+ tree
-        for (const auto& pair : values) {
-            _index.insert(pair);
-        }
+        _index.bulk_load(values.begin(), values.end());
     }
 
     bool get(KEY_TYPE key) override {

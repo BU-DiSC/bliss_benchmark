@@ -9,7 +9,7 @@ namespace bliss {
 template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissIndex {
    public:
-    virtual void preload(std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values);
+    virtual void bulkload(std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values);
     virtual bool get(KEY_TYPE key) = 0;
     virtual void put(KEY_TYPE key, VALUE_TYPE value) = 0;
 };

@@ -13,9 +13,10 @@ template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissAlexIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
     alex::Alex<KEY_TYPE, VALUE_TYPE> _index;
-    BlissAlexIndex() { _index = alex::Alex<KEY_TYPE, VALUE_TYPE>(); }
+    BlissAlexIndex() : _index(){};
 
-    void preload(std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values) override {
+    void bulkload(
+        std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values) override {
         this->_index.bulk_load(values.data(), values.size());
     }
 

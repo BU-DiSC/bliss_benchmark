@@ -20,12 +20,12 @@ class BlissDB:
                 write_factor REAL,
                 read_factor REAL,
                 mixed_ratio REAL,
-                use_preload INT
+                use_preload INT,
                 preload_time INT,
                 preload_creation_time INT,
                 write_time INT,
                 mixed_time INT,
-                read_time INT,
+                read_time INT
             );
             """
         )
@@ -51,12 +51,12 @@ class BlissDB:
                    write_factor,
                    read_factor,
                    mixed_ratio,
-                   use_preload
+                   use_preload,
                    preload_time,
                    preload_creation_time,
                    write_time,
                    mixed_time,
-                   read_time,
+                   read_time
                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
             """,
             (

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import re
+import logging
 import subprocess
 import random
 
@@ -74,6 +75,7 @@ class PyBliss:
         )
         assert process.stdout is not None
         proc_results, _ = process.communicate()
+        logging.debug(f"{proc_results}")
 
         preload_time = self.preload_time_regex.search(proc_results)
         preload_time = int(preload_time.group(1)) if preload_time else 0

@@ -58,3 +58,16 @@ endif()
 
 add_library(lipp INTERFACE)
 target_include_directories(lipp INTERFACE ${lipp_SOURCE_DIR}/src/core)
+
+FetchContent_Declare(
+        tlx
+        GIT_REPOSITORY https://github.com/tlx/tlx.git
+        GIT_TAG master
+)
+FetchContent_GetProperties(tlx)
+if (NOT tlx_POPULATED)
+    FetchContent_Populate(tlx)
+endif()
+
+add_library(tlx INTERFACE)
+target_include_directories(tlx INTERFACE ${tlx_SOURCE_DIR}/)

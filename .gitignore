@@ -195,3 +195,8 @@ script/infra/__pycache__
 results.db
 data/*.data
 *.bin
+
+.idea
+cmake-build-debug/
+src/bliss/.idea/
+

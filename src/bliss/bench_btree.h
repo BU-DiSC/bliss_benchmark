@@ -16,11 +16,7 @@ class BlissBTreeIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
 
     // bulk load
     void preload(std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values) override {
-        // Sort the values by key before bulk loading
-        std::sort(values.begin(), values.end(), [](const auto& a, const auto& b) {
-            return a.first < b.first;
-        });
-
+        // Value has been pre-sorted
         // Insert sorted values into the B+ tree
         _index.bulk_load(values.begin(), values.end());
     }

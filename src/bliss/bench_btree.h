@@ -30,7 +30,7 @@ class BlissBTreeIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
         return it != _index.end();
     }
 
-    void put(KEY_TYPE key, VALUE_TYPE value) override {
+    void insert(KEY_TYPE key, VALUE_TYPE value) override {
         _index[key] = value;
     }
 };

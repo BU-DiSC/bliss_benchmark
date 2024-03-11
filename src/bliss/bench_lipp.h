@@ -13,7 +13,7 @@ class BlissLippIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     LIPP<KEY_TYPE, VALUE_TYPE> _index;
     BlissLippIndex() : _index(){};
 
-    void preload(std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values) override {
+    void bulkload(std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values) override {
         this->_index.bulk_load(values.data(), values.size());
     }
 

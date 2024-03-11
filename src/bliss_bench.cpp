@@ -123,10 +123,10 @@ std::vector<std::pair<key_type, value_type>> create_preload_vec(
     return vec;
 }
 
-void execute_preload(bliss::BlissIndex<key_type, value_type> &tree,
-                     std::vector<std::pair<key_type, value_type>> &values) {
-    spdlog::trace("Preloading values");
-    tree.preload(values);
+void execute_bulkload(bliss::BlissIndex<key_type, value_type> &tree,
+                      std::vector<std::pair<key_type, value_type>> &values) {
+    spdlog::trace("Bulkloading values");
+    tree.bulkload(values);
 }
 
 void execute_inserts(bliss::BlissIndex<key_type, value_type> &tree,
@@ -193,7 +193,7 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
             std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::high_resolution_clock::now() - start)
                 .count();
-        preload_time = time_function([&]() { execute_preload(tree, vec); });
+        preload_time = time_function([&]() { execute_bulkload(tree, vec); });
     } else {
         auto start = std::chrono::high_resolution_clock::now();
         auto vec = create_preload_vec(preload_start, preload_end, false);

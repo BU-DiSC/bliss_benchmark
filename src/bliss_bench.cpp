@@ -270,5 +270,7 @@ int main(int argc, char *argv[]) {
 
     workload_executor(*index, data, config, 0);
 
+    index->end_routine();
+
     return 0;
 }

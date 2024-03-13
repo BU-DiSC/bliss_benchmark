@@ -7,15 +7,12 @@ from infra.db import BlissDB
 from infra.pybliss import BlissArgs, PyBliss
 from infra.util import get_file_params
 
-K_CHOICES = [1, 3, 5, 10, 25, 50]
-L_CHOICES = [1, 3, 5, 10, 25, 50]
-SPECIAL_KL = ((0, 0), (100, 100))
 INDEXES = ["alex", "lipp"]
 PRELOAD_FACTOR = 0.4
 WRITE_FACTOR = 0.4
 READ_FACTOR = 0.2
 MIXED_RATIO = 0.5
-PRELOAD = False
+PRELOAD = True
 
 
 def main(args):

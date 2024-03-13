@@ -24,6 +24,8 @@ class BlissLippIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     void put(KEY_TYPE key, VALUE_TYPE value) override {
         _index.insert(key, value);
     }
+
+    void end_routine() override {}
 };
 
 }  // namespace bliss

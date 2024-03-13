@@ -17,14 +17,16 @@ class BlissBTreeIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     void bulkload(
         std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values) override {
         // expects the pairs to be pre-sorted before performing bulk load
-        _index.bulk_load(values.begin(), values.end());
+        this->_index.bulk_load(values.begin(), values.end());
     }
 
-    bool get(KEY_TYPE key) override { return _index.exists(key); }
+    bool get(KEY_TYPE key) override { return this->_index.exists(key); }
 
     void put(KEY_TYPE key, VALUE_TYPE value) override {
-        _index.insert(std::make_pair(key, value));
+        this->_index.insert(std::make_pair(key, value));
     }
+
+    void end_routine() override {}
 };
 
 }  // namespace bliss

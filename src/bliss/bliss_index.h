@@ -12,6 +12,7 @@ class BlissIndex {
     virtual void bulkload(std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values);
     virtual bool get(KEY_TYPE key) = 0;
     virtual void put(KEY_TYPE key, VALUE_TYPE value) = 0;
+    virtual void end_routine() = 0;
 };
 
 }  // namespace bliss

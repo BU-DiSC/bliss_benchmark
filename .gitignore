@@ -200,3 +200,4 @@ data/*.data
 cmake-build-debug/
 src/bliss/.idea/
 
+db_working_home

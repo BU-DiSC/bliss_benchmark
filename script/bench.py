@@ -7,33 +7,34 @@ from infra.db import BlissDB
 from infra.pybliss import BlissArgs, PyBliss
 from infra.util import get_file_params
 
-INDEXES = ["alex", "lipp"]
+INDEXES = ["btree"]
 PRELOAD_FACTOR = 0.4
 WRITE_FACTOR = 0.4
 READ_FACTOR = 0.2
 MIXED_RATIO = 0.5
-PRELOAD = True
+PRELOAD = False
 
 
 def main(args):
     bliss = PyBliss(args.bliss, args.smoke_test)
     db = BlissDB(args.result_db)
     files = os.listdir(args.data_folder)
-    exp_pairs = ((file, index) for file in files for index in INDEXES)
+    kwargs = {
+        "preload_factor": PRELOAD_FACTOR,
+        "write_factor": WRITE_FACTOR,
+        "read_factor": READ_FACTOR,
+        "mixed_ratio": MIXED_RATIO,
+        "file_type": "binary",
+        "seed": 0,
+        "use_preload": PRELOAD,
+    }
 
+    exp_pairs = ((file, index) for file in files for index in INDEXES)
     for file, index in exp_pairs:
         _, k_pt, l_pt = get_file_params(file)
         logging.info(f"Running bliss ({index}, {file})")
         bliss_args = BlissArgs(
-            data_file=os.path.join(args.data_folder, file),
-            index_type=index,
-            preload_factor=PRELOAD_FACTOR,
-            write_factor=WRITE_FACTOR,
-            read_factor=READ_FACTOR,
-            mixed_ratio=MIXED_RATIO,
-            file_type="binary",
-            seed=0,
-            use_preload=PRELOAD,
+            data_file=os.path.join(args.data_folder, file), index_type=index, **kwargs
         )
         logging.debug(f"BlissArgs: {bliss_args}")
         stats = bliss.run_single_bliss_bench(bliss_args)

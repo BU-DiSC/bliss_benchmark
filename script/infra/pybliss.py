@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import re
+import os
 import logging
 import subprocess
 import random
@@ -91,6 +92,12 @@ class PyBliss:
 
         read_time = self.read_time_regex.search(proc_results)
         read_time = int(read_time.group(1)) if read_time else 0
+
+        os.makedirs("./run_logs", exist_ok=True)
+        _, file_name = os.path.split(args.data_file)
+        file_name, _ = os.path.splitext(file_name + f"_{args.index_type}")
+        with open(os.path.join("./run_logs", file_name + ".log"), "w") as fid:
+            fid.write(proc_results)
 
         return BlissStats(
             preload_time=preload_time,

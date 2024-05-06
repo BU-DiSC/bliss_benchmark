@@ -3,9 +3,12 @@ import os
 import argparse
 from infra.pybods import PyBods, BodsArgs
 
-K_CHOICES = [1, 3, 5, 10, 25, 50, 100]
-L_CHOICES = [1, 3, 5, 10, 25, 50, 100]
-SPECIAL_KL = [(0, 0), (100, 100)]
+# K_CHOICES = [1, 3, 5, 10, 25, 50, 100]
+# L_CHOICES = [1, 3, 5, 10, 25, 50, 100]
+# SPECIAL_KL = [(0, 0), (100, 100)]
+K_CHOICES = [3, 5, 10]
+L_CHOICES = [10]
+SPECIAL_KL = []
 
 NUM_KEYS = 500_000_000
 BINARY_FILE_FORMAT = True
@@ -28,6 +31,7 @@ def main(args: argparse.Namespace):
             k_pt=k_pt,
             l_pt=l_pt,
             binary_file_format=BINARY_FILE_FORMAT,
+            seed=2169,
         )
         results = bods.gen_data(bods_args)
         print(results)

@@ -4,9 +4,9 @@
 #include "bepsilon/betree.h"
 #include "bliss/bliss_index.h"
 
-const size_t max_node_size = 510;  // default node size in number of entries
+const size_t max_node_size = 64;  // default node size in number of entries
 const size_t min_flush_size = max_node_size / 4;
-const size_t cache_size = 4000000;  // in betree nodes
+const size_t cache_size = 4;  // in betree nodes
 
 namespace bliss {
 
@@ -15,7 +15,7 @@ class BlissBeTreeIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
     betree<KEY_TYPE, VALUE_TYPE> *_index;
     BlissBeTreeIndex() {
-        one_file_per_object_backing_store ofpobs("./detree_data");
+        one_file_per_object_backing_store ofpobs("betree_data/");
         swap_space sspace(&ofpobs, cache_size);
 
         _index = new betree<KEY_TYPE, VALUE_TYPE>(&sspace, max_node_size,

@@ -139,6 +139,7 @@ void execute_inserts(bliss::BlissIndex<key_type, value_type> &tree,
 
     auto num_keys = end - start;
     for (auto &curr = start; curr != end; ++curr) {
+        std::cout << "Inserting key: " << *curr << std::endl;
         tree.put(*curr, std::round(dist(gen) * num_keys));
     }
 }

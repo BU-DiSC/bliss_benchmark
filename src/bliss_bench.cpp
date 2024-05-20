@@ -7,6 +7,7 @@
 #include <string>
 
 #include "bliss/bench_alex.h"
+#include "bliss/bench_betree.h"
 #include "bliss/bench_btree.h"
 #include "bliss/bench_lipp.h"
 #include "bliss/bliss_index.h"
@@ -47,9 +48,9 @@ BlissConfig parse_args(int argc, char *argv[]) {
             cxxopts::value<double>()->default_value("0.5"))(
             "s,seed", "Random Seed value",
             cxxopts::value<int>()->default_value("0"))(
-            "v,verbosity", "Verbosity [0: Info| 1: Debug | 2: Trace]",
+            "v,verbosity", "Verbosity [0: Info| 1: info | 2: Trace]",
             cxxopts::value<int>()->default_value("0")->implicit_value("1"))(
-            "i,index", "Index type [alex | lipp | btree | bepstree | lsm]",
+            "i,index", "Index type [alex | lipp | btree | betree | lsm]",
             cxxopts::value<std::string>()->default_value("btree"))(
             "file_type", "Input file type [binary | txt]",
             cxxopts::value<std::string>()->default_value("txt"))(
@@ -181,7 +182,7 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
     size_t num_reads = std::round(config.read_factor * data.size());
 
     // Timing for preloading index
-    spdlog::debug("Preloading {} items", num_preload);
+    spdlog::info("Preloading {} items", num_preload);
     auto preload_start = data.begin();
     auto preload_end = preload_start + num_preload;
     unsigned long long preload_time;
@@ -208,7 +209,7 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
     spdlog::info("Preload Time (ns): {}", preload_time);
 
     // Timing for writes on index
-    spdlog::debug("Writing {} items", num_writes);
+    spdlog::info("Writing {} items", num_writes);
     auto write_start = preload_end;
     auto write_end = write_start + num_writes;
     auto write_time =
@@ -216,7 +217,7 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
     spdlog::info("Write Time (ns): {}", write_time);
 
     // Timing for mixed workloads running
-    spdlog::debug("Running Mixed {} items", num_mixed);
+    spdlog::info("Running Mixed {} items", num_mixed);
     auto mix_start = write_end;
     auto mix_end = mix_start + num_mixed;
     auto mix_time = time_function([&]() {
@@ -226,7 +227,7 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
     spdlog::info("Mix Time (ns): {}", mix_time);
 
     // Timing for reads on index
-    spdlog::debug("Reading {} items", num_reads);
+    spdlog::info("Reading {} items", num_reads);
     auto read_time = time_function(
         [&]() { execute_non_empty_reads(tree, data, num_reads, seed); });
     spdlog::info("Read Time (ns): {}", read_time);
@@ -236,7 +237,7 @@ int main(int argc, char *argv[]) {
     auto config = parse_args(argc, argv);
     switch (config.verbosity) {
         case 1:
-            spdlog::set_level(spdlog::level::debug);
+            spdlog::set_level(spdlog::level::info);
             break;
         case 2:
             spdlog::set_level(spdlog::level::trace);
@@ -252,9 +253,8 @@ int main(int argc, char *argv[]) {
     } else {
         data = bliss::read_file<key_type>(config.data_file.c_str());
     }
-    spdlog::debug("data.at(0) = {}", data.at(0));
-    spdlog::debug("data.at({}) = {}", data.size() - 1,
-                  data.at(data.size() - 1));
+    spdlog::info("data.at(0) = {}", data.at(0));
+    spdlog::info("data.at({}) = {}", data.size() - 1, data.at(data.size() - 1));
 
     std::unique_ptr<bliss::BlissIndex<key_type, value_type>> index;
     // Call the respective function based on the index value
@@ -264,6 +264,8 @@ int main(int argc, char *argv[]) {
         index.reset(new bliss::BlissLippIndex<key_type, value_type>());
     } else if (config.index == "btree") {
         index.reset(new bliss::BlissBTreeIndex<key_type, value_type>());
+    } else if (config.index == "betree") {
+        index.reset(new bliss::BlissBeTreeIndex<key_type, value_type>());
     } else {
         spdlog::error("{} not implemented yet", config.index);
     }

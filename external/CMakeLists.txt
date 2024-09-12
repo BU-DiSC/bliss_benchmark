@@ -32,6 +32,21 @@ FetchContent_MakeAvailable(cxxopts)
 
 
 FetchContent_Declare(
+    rax
+    GIT_REPOSITORY https://github.com/antirez/rax
+    GIT_TAG master
+)
+FetchContent_GetProperties(rax)
+if (NOT rax_POPULATED)
+    FetchContent_Populate(rax)
+endif()
+
+add_library(rax INTERFACE)
+target_include_directories(rax INTERFACE ${rax_SOURCE_DIR})
+
+
+
+FetchContent_Declare(
     alex
     GIT_REPOSITORY https://github.com/microsoft/ALEX.git
     GIT_TAG master
@@ -59,10 +74,12 @@ endif()
 add_library(lipp INTERFACE)
 target_include_directories(lipp INTERFACE ${lipp_SOURCE_DIR}/src/core)
 
+
+
 FetchContent_Declare(
-        tlx
-        GIT_REPOSITORY https://github.com/tlx/tlx.git
-        GIT_TAG master
+    tlx
+    GIT_REPOSITORY https://github.com/tlx/tlx.git
+    GIT_TAG master
 )
 FetchContent_GetProperties(tlx)
 if (NOT tlx_POPULATED)

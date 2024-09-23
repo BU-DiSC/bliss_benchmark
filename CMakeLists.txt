@@ -50,7 +50,6 @@ add_library(bliss OBJECT
     ${CMAKE_SOURCE_DIR}/src/bliss/bliss_index.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_lipp.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_alex.h
-    ${CMAKE_SOURCE_DIR}/src/bliss/bench_rax.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_btree.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_art.h
 )

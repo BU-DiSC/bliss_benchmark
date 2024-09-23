@@ -32,17 +32,17 @@ FetchContent_MakeAvailable(cxxopts)
 
 
 FetchContent_Declare(
-    rax
-    GIT_REPOSITORY https://github.com/antirez/rax
-    GIT_TAG master
+    art
+    GIT_REPOSITORY https://github.com/BU-DiSC/ART
+    GIT_TAG main
 )
-FetchContent_GetProperties(rax)
-if (NOT rax_POPULATED)
-    FetchContent_Populate(rax)
+FetchContent_GetProperties(art)
+if (NOT art_POPULATED)
+    FetchContent_Populate(art)
 endif()
 
-add_library(rax INTERFACE)
-target_include_directories(rax INTERFACE ${rax_SOURCE_DIR})
+add_library(art INTERFACE)
+target_include_directories(art INTERFACE ${art_SOURCE_DIR})
 
 
 

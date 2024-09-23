@@ -1,7 +1,6 @@
 #include <alex.h>
 #include <lipp.h>
-
-#include "rax.h"
+#include <ART.h>
 #include <spdlog/common.h>
 
 #include <cxxopts.hpp>
@@ -11,7 +10,8 @@
 #include "bliss/bench_alex.h"
 #include "bliss/bench_btree.h"
 #include "bliss/bench_lipp.h"
-#include "bliss/bench_rax.h"
+#include "bliss/bench_ART.h"
+
 #include "bliss/bliss_index.h"
 #include "bliss/util/reader.h"
 #include "bliss/util/timer.h"
@@ -52,7 +52,7 @@ BlissConfig parse_args(int argc, char *argv[]) {
             cxxopts::value<int>()->default_value("0"))(
             "v,verbosity", "Verbosity [0: Info| 1: Debug | 2: Trace]",
             cxxopts::value<int>()->default_value("0")->implicit_value("1"))(
-            "i,index", "Index type [alex | lipp | btree | bepstree | lsm | radix_tree]",
+            "i,index", "Index type [alex | lipp | btree | bepstree | lsm | ART]",
             cxxopts::value<std::string>()->default_value("btree"))(
             "file_type", "Input file type [binary | txt]",
             cxxopts::value<std::string>()->default_value("txt"))(
@@ -255,11 +255,13 @@ int main(int argc, char *argv[]) {
     } else {
         data = bliss::read_file<key_type>(config.data_file.c_str());
     }
+
     spdlog::debug("data.at(0) = {}", data.at(0));
     spdlog::debug("data.at({}) = {}", data.size() - 1,
                   data.at(data.size() - 1));
 
     std::unique_ptr<bliss::BlissIndex<key_type, value_type>> index;
+
     // Call the respective function based on the index value
     if (config.index == "alex") {
         index.reset(new bliss::BlissAlexIndex<key_type, value_type>());
@@ -267,8 +269,8 @@ int main(int argc, char *argv[]) {
         index.reset(new bliss::BlissLippIndex<key_type, value_type>());
     } else if (config.index == "btree") {
         index.reset(new bliss::BlissBTreeIndex<key_type, value_type>());
-    } else if (config.index == "radix_tree") {
-        index.reset(new bliss::BlissRaxIndex<key_type, value_type>());
+    } else if (config.index == "ART") {
+        index.reset(new bliss::BlissARTIndex<key_type, value_type>());
     } else {
         spdlog::error("{} not implemented yet", config.index);
     }

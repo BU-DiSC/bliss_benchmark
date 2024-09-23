@@ -7,7 +7,7 @@ from infra.db import BlissDB
 from infra.pybliss import BlissArgs, PyBliss
 from infra.util import get_file_params
 
-INDEXES = ["btree", "radix_tree"]
+INDEXES = ["btree", "radix_tree", "ART"]
 PRELOAD_FACTOR = 0.4
 WRITE_FACTOR = 0.4
 READ_FACTOR = 0.2
@@ -77,7 +77,6 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-
     log_level = logging.WARNING
     if args.verbose == 1:
         log_level = logging.INFO

@@ -2,6 +2,7 @@
 #define BLISS_BENCH_ART
 
 #include "ART.h"
+#include "ART.h"
 
 #include <vector>
 

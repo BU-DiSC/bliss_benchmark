@@ -45,7 +45,7 @@ add_library(bliss OBJECT
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_lipp.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_alex.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_btree.h
-    ${CMAKE_SOURCE_DIR}/src/bliss/bench_ART.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/bench_art.h
 )
 
 target_compile_features(bliss PUBLIC

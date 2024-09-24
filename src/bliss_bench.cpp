@@ -1,6 +1,6 @@
 #include <alex.h>
 #include <lipp.h>
-#include <ART.h>
+#include "ART.h"
 #include <spdlog/common.h>
 
 #include <cxxopts.hpp>
@@ -10,8 +10,7 @@
 #include "bliss/bench_alex.h"
 #include "bliss/bench_btree.h"
 #include "bliss/bench_lipp.h"
-#include "bliss/bench_ART.h"
-
+#include "bliss/bench_art.h"
 #include "bliss/bliss_index.h"
 #include "bliss/util/reader.h"
 #include "bliss/util/timer.h"
@@ -52,7 +51,7 @@ BlissConfig parse_args(int argc, char *argv[]) {
             cxxopts::value<int>()->default_value("0"))(
             "v,verbosity", "Verbosity [0: Info| 1: Debug | 2: Trace]",
             cxxopts::value<int>()->default_value("0")->implicit_value("1"))(
-            "i,index", "Index type [alex | lipp | btree | bepstree | lsm | ART]",
+            "i,index", "Index type [alex | lipp | btree | bepstree | lsm | art]",
             cxxopts::value<std::string>()->default_value("btree"))(
             "file_type", "Input file type [binary | txt]",
             cxxopts::value<std::string>()->default_value("txt"))(
@@ -269,7 +268,7 @@ int main(int argc, char *argv[]) {
         index.reset(new bliss::BlissLippIndex<key_type, value_type>());
     } else if (config.index == "btree") {
         index.reset(new bliss::BlissBTreeIndex<key_type, value_type>());
-    } else if (config.index == "ART") {
+    } else if (config.index == "art") {
         index.reset(new bliss::BlissARTIndex<key_type, value_type>());
     } else {
         spdlog::error("{} not implemented yet", config.index);

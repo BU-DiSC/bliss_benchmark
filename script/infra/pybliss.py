@@ -68,7 +68,6 @@ class PyBliss:
             f"--file_type {'binary' if args.file_type else 'txt'}",
             "--use_preload" if args.use_preload else "",
         ]
-        print("this is cmd: " , " ".join(cmd))
         process = subprocess.Popen(
             " ".join(cmd),
             stdout=subprocess.PIPE,

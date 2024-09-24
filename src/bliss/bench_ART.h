@@ -1,7 +1,7 @@
 #ifndef BLISS_BENCH_ART
 #define BLISS_BENCH_ART
 
-#include <ART.h>
+#include "ART.h"
 
 #include <vector>
 
@@ -14,6 +14,7 @@ namespace bliss {
 template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissARTIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
+   static constexpr size_t KEY_SIZE = sizeof(KEY_TYPE);
    ART::Node* _index;
     BlissARTIndex() {
         _index = nullptr;
@@ -28,17 +29,20 @@ class BlissARTIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     }
 
     bool get(KEY_TYPE key) override { 
-        uint8_t ARTkey[8];
+        uint8_t ARTkey[KEY_SIZE];
         ART::loadKey(key, ARTkey);
 
-        ART::Node* leaf = ART::lookup(_index, ARTkey, 8, 0, 8);
+        uint8_t depth = 0;
+        ART::Node* leaf = ART::lookup(_index, ARTkey, KEY_SIZE, depth, KEY_SIZE);
         return ART::isLeaf(leaf) && ART::getLeafValue(leaf) == key;
      }
 
     void put(KEY_TYPE key, VALUE_TYPE value) override {
-        uint8_t ARTkey[8];
+        uint8_t ARTkey[KEY_SIZE];
         ART::loadKey(key, ARTkey);
-        ART::insert(_index, &_index, ARTkey, 0, key, 8);
+
+        uint8_t depth = 0;
+        ART::insert(_index, &_index, ARTkey, depth, key, KEY_SIZE);
     }
 
     void end_routine() override {}

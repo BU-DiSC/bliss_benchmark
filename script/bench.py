@@ -7,7 +7,7 @@ from infra.db import BlissDB
 from infra.pybliss import BlissArgs, PyBliss
 from infra.util import get_file_params
 
-INDEXES = ["btree", "radix_tree", "ART"]
+INDEXES = ["btree", "art"]
 PRELOAD_FACTOR = 0.4
 WRITE_FACTOR = 0.4
 READ_FACTOR = 0.2

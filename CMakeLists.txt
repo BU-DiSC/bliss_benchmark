@@ -41,6 +41,8 @@ add_subdirectory(external)
 add_library(bliss OBJECT
     ${CMAKE_SOURCE_DIR}/src/bliss/util/timer.h
     ${CMAKE_SOURCE_DIR}/src/bliss/util/reader.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/util/args.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/util/config.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bliss_index.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_lipp.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_alex.h

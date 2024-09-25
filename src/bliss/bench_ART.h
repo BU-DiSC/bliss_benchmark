@@ -31,7 +31,6 @@ class BlissARTIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     bool get(KEY_TYPE key) override { 
         uint8_t ARTkey[KEY_SIZE];
         ART::loadKey(key, ARTkey);
-
         uint8_t depth = 0;
         ART::Node* leaf = ART::lookup(_index, ARTkey, KEY_SIZE, depth, KEY_SIZE);
         return ART::isLeaf(leaf) && ART::getLeafValue(leaf) == key;
@@ -42,7 +41,7 @@ class BlissARTIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
         ART::loadKey(key, ARTkey);
 
         uint8_t depth = 0;
-        ART::insert(_index, &_index, ARTkey, depth, key, KEY_SIZE);
+        ART::insert(_index, &_index, ARTkey, depth, value, KEY_SIZE);
     }
 
     void end_routine() override {}

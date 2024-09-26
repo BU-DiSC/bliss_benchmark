@@ -10,6 +10,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
+enable_testing()
+
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
     ADD_DEFINITIONS(-DDEBUG)
 endif()
@@ -33,6 +35,8 @@ endif()
 #   add external libs (after git submodule init)
 # =============================================================================
 add_subdirectory(external)
+
+add_subdirectory(tests)
 
 # =============================================================================
 # HEADER bliss

@@ -17,36 +17,11 @@
 #include "bliss/util/timer.h"
 
 using namespace bliss::utils;
-void execute_non_empty_reads(bliss::BlissIndex<key_type, value_type> &tree,
-                             std::vector<key_type> &data, int num_reads,
-                             int seed = 0) {
-    std::mt19937 gen(seed);
-    std::uniform_int_distribution<int> dist(0, 1);
-
-    size_t key_idx;
-    for (auto blank = 0; blank < num_reads; blank++) {
-        key_idx = std::round(dist(gen) * (data.size() - 1));
-        tree.get(data.at(key_idx));
-    }
-}
 
 void execute_bulkload(bliss::BlissIndex<key_type, value_type> &tree,
                       std::vector<std::pair<key_type, value_type>> &values) {
     spdlog::trace("Bulkloading values");
     tree.bulkload(values);
-}
-
-void execute_inserts(bliss::BlissIndex<key_type, value_type> &tree,
-                     std::vector<key_type>::iterator &start,
-                     std::vector<key_type>::iterator &end, int seed = 0) {
-    spdlog::trace("Executing Inserts");
-    std::mt19937 gen(seed);
-    std::uniform_int_distribution<value_type> dist(0, 1);
-
-    auto num_keys = end - start;
-    for (auto &curr = start; curr != end; ++curr) {
-        tree.put(*curr, std::round(dist(gen) * num_keys));
-    }
 }
 
 void execute_mixed_workload(bliss::BlissIndex<key_type, key_type> &tree,
@@ -128,8 +103,9 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
             std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::high_resolution_clock::now() - start)
                 .count();
-        preload_time = time_function(
-            [&]() { execute_inserts(tree, preload_start, preload_end); });
+        preload_time = time_function([&]() {
+            executor::execute_inserts(tree, preload_start, preload_end);
+        });
     }
     spdlog::info("Preload Creation Time (ns): {}", preload_creation_time);
     spdlog::info("Preload Time (ns): {}", preload_time);
@@ -138,8 +114,8 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
     spdlog::debug("Writing {} items", num_writes);
     auto write_start = preload_end;
     auto write_end = write_start + num_writes;
-    auto write_time =
-        time_function([&]() { execute_inserts(tree, write_start, write_end); });
+    auto write_time = time_function(
+        [&]() { executor::execute_inserts(tree, write_start, write_end); });
     spdlog::info("Write Time (ns): {}", write_time);
 
     // Timing for mixed workloads running
@@ -154,8 +130,9 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
 
     // Timing for reads on index
     spdlog::debug("Reading {} items", num_reads);
-    auto read_time = time_function(
-        [&]() { execute_non_empty_reads(tree, data, num_reads, seed); });
+    auto read_time = time_function([&]() {
+        executor::execute_non_empty_reads(tree, data, num_reads, seed);
+    });
     spdlog::info("Read Time (ns): {}", read_time);
 }
 

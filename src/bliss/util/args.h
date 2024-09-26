@@ -1,5 +1,5 @@
-#ifndef ARGS_H
-#define ARGS_H
+#ifndef BLISS_ARGS_H
+#define BLISS_ARGS_H
 #include <cxxopts.hpp>
 #include <iostream>
 #include <string>

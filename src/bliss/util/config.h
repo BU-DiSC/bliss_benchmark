@@ -1,5 +1,5 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef BLISS_CONFIG_H
+#define BLISS_CONFIG_H
 
 #include <spdlog/common.h>
 

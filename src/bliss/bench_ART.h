@@ -15,6 +15,7 @@ template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissARTIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
    static constexpr size_t KEY_SIZE = sizeof(KEY_TYPE);
+   static constexpr size_t VALUE_SIZE = sizeof(KEY_TYPE);
    ART::Node* _index;
     BlissARTIndex() {
         _index = nullptr;
@@ -41,7 +42,7 @@ class BlissARTIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
         ART::loadKey(key, ARTkey);
 
         uint8_t depth = 0;
-        ART::insert(_index, &_index, ARTkey, depth, value, KEY_SIZE);
+        ART::insert(_index, &_index, ARTkey, depth, value, VALUE_SIZE);
     }
 
     void end_routine() override {}

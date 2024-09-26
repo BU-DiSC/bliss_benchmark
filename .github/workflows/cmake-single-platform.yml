@@ -36,6 +36,11 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
+    - name: Verify Tests Exist
+      
+      working-directory: ${{github.workspace}}/tests
+      run: sh unit_test_exists.sh
+
     - name: Test
       working-directory: ${{github.workspace}}/build
       # Execute tests defined by the CMake configuration.

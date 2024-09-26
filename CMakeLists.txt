@@ -10,6 +10,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
+enable_testing()
+
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
     ADD_DEFINITIONS(-DDEBUG)
 endif()
@@ -34,6 +36,8 @@ endif()
 # =============================================================================
 add_subdirectory(external)
 
+add_subdirectory(tests)
+
 # =============================================================================
 # HEADER bliss
 #   Bliss lib files
@@ -41,6 +45,8 @@ add_subdirectory(external)
 add_library(bliss OBJECT
     ${CMAKE_SOURCE_DIR}/src/bliss/util/timer.h
     ${CMAKE_SOURCE_DIR}/src/bliss/util/reader.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/util/args.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/util/config.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bliss_index.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_lipp.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_alex.h

@@ -2,7 +2,6 @@
 #define BLISS_BENCH_ART
 
 #include "ART.h"
-#include "ART.h"
 
 #include <vector>
 
@@ -41,9 +40,7 @@ class BlissARTIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     void put(KEY_TYPE key, VALUE_TYPE value) override {
         uint8_t ARTkey[KEY_SIZE];
         ART::loadKey(key, ARTkey);
-
-        uint8_t depth = 0;
-        ART::insert(_index, &_index, ARTkey, depth, value, VALUE_SIZE);
+        ART::insert(_index, &_index, ARTkey, 0, key, 8);
     }
 
     void end_routine() override {}

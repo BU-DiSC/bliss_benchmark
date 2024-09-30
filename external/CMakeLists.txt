@@ -71,3 +71,17 @@ endif()
 
 add_library(tlx INTERFACE)
 target_include_directories(tlx INTERFACE ${tlx_SOURCE_DIR}/)
+
+
+FetchContent_Declare(
+    skiplist
+    GIT_REPOSITORY https://github.com/Samyak2/skip-list.git
+    GIT_TAG main
+)
+FetchContent_GetProperties(skiplist)
+if (NOT skiplist_POPULATED)
+    FetchContent_Populate(skiplist)
+endif()
+
+add_library(skiplist INTERFACE)
+target_include_directories(skiplist INTERFACE ${skiplist_SOURCE_DIR}/src/core)

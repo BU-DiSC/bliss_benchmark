@@ -1,9 +1,9 @@
 #include "bliss_index_tests.h"
 
-class LippTest : public BlissIndexTest {};
+class SkipListTest : public BlissIndexTest {};
 
-TEST_F(LippTest, TestLipp_Sorted) {
-    index.reset(new bliss::BlissLippIndex<key_type, key_type>());
+TEST_F(SkipListTest, TestSkipList_Sorted) {
+    index.reset(new bliss::BlissSkipListIndex<key_type, key_type>());
     std::vector<key_type> data;
     GenerateData(data, num_keys);
 
@@ -16,8 +16,8 @@ TEST_F(LippTest, TestLipp_Sorted) {
     }
 }
 
-TEST_F(LippTest, TestLipp_Random) {
-    index.reset(new bliss::BlissLippIndex<key_type, key_type>());
+TEST_F(SkipListTest, TestSkipList_Random) {
+    index.reset(new bliss::BlissSkipListIndex<key_type, key_type>());
     std::vector<key_type> data;
     GenerateData(data, num_keys, false);
 

@@ -4,14 +4,14 @@
 #include <vector>
 
 #include "bliss/bliss_index.h"
-#include "skiplist/skiplist.hpp"
+#include "skiplist_map.hpp"
 
 namespace bliss {
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissSkipListIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
-    skiplist::skiplist<KEY_TYPE, VALUE_TYPE> _index;
+    skiplist<KEY_TYPE, VALUE_TYPE> _index;
     BlissSkipListIndex() : _index(){};
 
     void bulkload(

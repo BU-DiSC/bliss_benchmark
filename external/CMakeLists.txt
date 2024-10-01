@@ -33,7 +33,7 @@ FetchContent_MakeAvailable(cxxopts)
 
 FetchContent_Declare(
     alex
-    GIT_REPOSITORY https://github.com/microsoft/ALEX.git
+    GIT_REPOSITORY https://github.com/microsoft/ALEX
     GIT_TAG master
 )
 FetchContent_GetProperties(alex)
@@ -84,4 +84,4 @@ if (NOT skiplist_POPULATED)
 endif()
 
 add_library(skiplist INTERFACE)
-target_include_directories(skiplist INTERFACE ${skiplist_SOURCE_DIR}/src/core)
+target_include_directories(skiplist INTERFACE ${skiplist_SOURCE_DIR}/skiplist)

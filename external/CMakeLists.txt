@@ -71,3 +71,17 @@ endif()
 
 add_library(tlx INTERFACE)
 target_include_directories(tlx INTERFACE ${tlx_SOURCE_DIR}/)
+
+# Adaptive Radix Tree 
+FetchContent_Declare(
+    art
+    GIT_REPOSITORY https://github.com/BU-DiSC/ART
+    GIT_TAG main
+)
+FetchContent_GetProperties(art)
+if (NOT art_POPULATED)
+    FetchContent_Populate(art)
+endif()
+
+add_library(art INTERFACE)
+target_include_directories(art INTERFACE ${art_SOURCE_DIR})

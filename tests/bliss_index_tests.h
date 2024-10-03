@@ -10,6 +10,7 @@
 #include <string>
 
 #include "bliss/bench_alex.h"
+#include "bliss/bench_art.h"
 #include "bliss/bench_btree.h"
 #include "bliss/bench_lipp.h"
 #include "bliss/bliss_index.h"

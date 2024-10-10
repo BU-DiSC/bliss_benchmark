@@ -12,8 +12,8 @@ namespace bliss {
 template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissARTIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
-    static constexpr size_t KEY_SIZE = sizeof(KEY_TYPE);
     ART::ArtNode* _index;
+    static constexpr size_t KEY_SIZE = sizeof(KEY_TYPE);
     BlissARTIndex() { _index = nullptr; };
 
     void bulkload(
@@ -27,16 +27,20 @@ class BlissARTIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     bool get(KEY_TYPE key) override {
         uint8_t ARTkey[KEY_SIZE];
         ART::loadKey(key, ARTkey);
-        uint8_t depth = 0;
+        std::cout << key << "" << std::endl;
+        for (size_t i = 0; i < KEY_SIZE; ++i) {
+            std::cout << static_cast<int>(ARTkey[i]) << " ";
+        }
+        std::cout << std::endl;
         ART::ArtNode* leaf =
-            ART::lookup(_index, ARTkey, KEY_SIZE, depth, KEY_SIZE);
-        return ART::isLeaf(leaf) && ART::getLeafValue(leaf) == key;
+            ART::lookup(_index, ARTkey, sizeof(key), 0, KEY_SIZE);
+        std::cout << ART::getLeafValue(leaf) << " <- leaf value" << std::endl;
+        return leaf != nullptr && ART::isLeaf(leaf);
     }
 
     void put(KEY_TYPE key, VALUE_TYPE value) override {
         uint8_t ARTkey[KEY_SIZE];
         ART::loadKey(key, ARTkey);
-
         // function signature for insert:
         // void insert(ArtNode* ArtNode, ArtNode** nodeRef, uint8_t key[],
         // unsigned depth, uintptr_t value, unsigned maxKeyLength)

@@ -4,26 +4,27 @@
 #include <vector>
 
 #include "bliss/bliss_index.h"
-#include "skiplist_map.hpp"
+#include "skip_list.h"
 
 namespace bliss {
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissSkipListIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
-    skiplist<KEY_TYPE, VALUE_TYPE> _index;
+
+    goodliffe::skip_list<KEY_TYPE> _index;
     BlissSkipListIndex() : _index(){};
 
     void bulkload(
         std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values) override {
-        for (const auto& pair : values) {
-            _index.insert(pair.first, pair.second);
+        for (const auto& key : values) {
+            put(key.first, key.second);
         }
     }
 
     bool get(KEY_TYPE key) override { return _index.find(key) != _index.end(); }
 
-    void put(KEY_TYPE key, VALUE_TYPE value) override { _index.insert(key, value); }
+    void put(KEY_TYPE key, VALUE_TYPE value) override { _index.insert(key); }
 
     void end_routine() override {}
 };

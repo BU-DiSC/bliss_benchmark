@@ -1,6 +1,6 @@
 #include <alex.h>
 #include <lipp.h>
-#include "skiplist_map.hpp"
+#include "skip_list.h"
 #include <spdlog/common.h>
 
 #include <cxxopts.hpp>

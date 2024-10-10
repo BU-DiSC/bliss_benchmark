@@ -75,8 +75,8 @@ target_include_directories(tlx INTERFACE ${tlx_SOURCE_DIR}/)
 
 FetchContent_Declare(
     skiplist
-    GIT_REPOSITORY https://github.com/Samyak2/skip-list.git
-    GIT_TAG main
+    GIT_REPOSITORY https://github.com/petegoodliffe/skip_list
+    GIT_TAG master
 )
 FetchContent_GetProperties(skiplist)
 if (NOT skiplist_POPULATED)
@@ -84,4 +84,4 @@ if (NOT skiplist_POPULATED)
 endif()
 
 add_library(skiplist INTERFACE)
-target_include_directories(skiplist INTERFACE ${skiplist_SOURCE_DIR}/skiplist)
+target_include_directories(skiplist INTERFACE ${skiplist_SOURCE_DIR})

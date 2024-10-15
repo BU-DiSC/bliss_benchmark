@@ -7,6 +7,7 @@
 #include <string>
 
 #include "bliss/bench_alex.h"
+#include "bliss/bench_art.h"
 #include "bliss/bench_btree.h"
 #include "bliss/bench_lipp.h"
 #include "bliss/bliss_index.h"
@@ -168,6 +169,8 @@ int main(int argc, char *argv[]) {
         index.reset(new bliss::BlissLippIndex<key_type, value_type>());
     } else if (config.index == "btree") {
         index.reset(new bliss::BlissBTreeIndex<key_type, value_type>());
+    } else if (config.index == "art") {
+        index.reset(new bliss::BlissARTIndex<key_type, value_type>());
     } else {
         spdlog::error(config.index + " not implemented yet", 1);
     }

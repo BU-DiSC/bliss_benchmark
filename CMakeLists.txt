@@ -51,6 +51,7 @@ add_library(bliss OBJECT
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_lipp.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_alex.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_btree.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/bench_imprints.h
 )
 
 target_compile_features(bliss PUBLIC
@@ -63,6 +64,7 @@ target_link_libraries(bliss PUBLIC
     alex
     lipp
     tlx
+    imprints
 )
 
 target_include_directories(bliss PUBLIC

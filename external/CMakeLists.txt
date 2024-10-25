@@ -72,7 +72,7 @@ endif()
 add_library(tlx INTERFACE)
 target_include_directories(tlx INTERFACE ${tlx_SOURCE_DIR}/)
 
-
+find_package(Boost REQUIRED)
 FetchContent_Declare(
         imprints
         GIT_REPOSITORY https://github.com/altramarine/imprints.git

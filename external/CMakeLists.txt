@@ -75,7 +75,7 @@ target_include_directories(tlx INTERFACE ${tlx_SOURCE_DIR}/)
 
 FetchContent_Declare(
         imprints
-        GIT_REPOSITORY https://github.com:altramarine/imprints.git
+        GIT_REPOSITORY https://github.com/altramarine/imprints.git
         GIT_TAG cmake-version
 )
 FetchContent_GetProperties(imprints)

@@ -22,7 +22,7 @@ void execute_inserts(bliss::BlissIndex<key_type, value_type> &tree,
     spdlog::trace("Executing Inserts");
     std::mt19937 gen(seed);
     auto num_keys = std::distance(start, end);
-    std::uniform_int_distribution<value_type> dist(0, num_keys - 1);
+    std::uniform_int_distribution<size_t> dist(0, num_keys - 1);
 
     for (auto curr = start; curr != end; ++curr) {
         tree.put(*curr, dist(gen));

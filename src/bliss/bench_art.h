@@ -19,7 +19,7 @@ class BlissARTIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     void bulkload(
         std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values) override {
         // expects the pairs to be pre-sorted before performing bulk load
-        for (const auto& pair : values) {
+        for (const auto pair : values) {
             put(pair.first, pair.second);
         }
     }
@@ -32,9 +32,10 @@ class BlissARTIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
             std::cout << static_cast<int>(ARTkey[i]) << " ";
         }
         std::cout << std::endl;
+        size_t testing = 2;
         ART::ArtNode* leaf =
-            ART::lookup(_index, ARTkey, sizeof(key), 0, KEY_SIZE);
-        std::cout << ART::getLeafValue(leaf) << " <- leaf value" << std::endl;
+            ART::lookup(_index, ARTkey, testing, 0, KEY_SIZE);
+        std::cout << ART::getLeafValue(leaf) << " <- leaf value" << std::endl << std::endl;
         return leaf != nullptr && ART::isLeaf(leaf);
     }
 

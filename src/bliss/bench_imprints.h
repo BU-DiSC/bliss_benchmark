@@ -6,14 +6,15 @@
 #include "bliss/bliss_index.h"
 #include <column_imprints.h>
 #include <boost/type_index.hpp>
+#include <string>
 
 namespace bliss {
 
 template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissImprintsIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
-    BlissImprintsIndex(int blocksize = 64, int maxbins = 64) : blocksize_(blocksize), maxbins_(maxbins) {
-        imprints_ = new Imprints<VALUE_TYPE>(blocksize, maxbins);
+    BlissImprintsIndex(int blocksize = 64, int maxbins = 64, std::string type_name = std::string("unsigned int")) : blocksize_(blocksize), maxbins_(maxbins) {
+        imprints_ = new Imprints<VALUE_TYPE>(blocksize, maxbins, type_name);
         // std::cout << "column initiated" << std::endl;
     };
 
@@ -51,6 +52,8 @@ class BlissImprintsIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     void end_routine() override {}
   private:
     Imprints<VALUE_TYPE> *imprints_;
+    int blocksize_, maxbins_;
+    std::string type_name;
 };
 
 }  // namespace bliss

@@ -5,7 +5,6 @@
 
 #include "bliss/bliss_index.h"
 #include <column_imprints.h>
-#include <boost/type_index.hpp>
 #include <string>
 
 namespace bliss {

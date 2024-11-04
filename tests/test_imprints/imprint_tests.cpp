@@ -3,7 +3,7 @@
 class ImprintsTest : public BlissIndexTest {};
 
 TEST_F(ImprintsTest, TestImprint_Random) {
-    index.reset(new bliss::BlissImprintsIndex<size_t, key_type>());
+    index.reset(new bliss::BlissImprintsIndex<size_t, key_type>(64, 64, std::string("unsigned long")));
     std::vector<key_type> data;
     GenerateData(data, num_keys, false);
     std::vector < std::pair<size_t, key_type> > bulkload_data;

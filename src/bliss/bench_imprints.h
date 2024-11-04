@@ -12,7 +12,7 @@ namespace bliss {
 template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissImprintsIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
-    BlissImprintsIndex(int blocksize = 64, int maxbins = 64, std::string type_name = std::string("unsigned int")) : blocksize_(blocksize), maxbins_(maxbins) {
+    BlissImprintsIndex(int blocksize = 64, int maxbins = 64, std::string type_name = std::string("unsigned long")) : blocksize_(blocksize), maxbins_(maxbins) {
         imprints_ = new Imprints<VALUE_TYPE>(blocksize, maxbins, type_name);
         // std::cout << "column initiated" << std::endl;
     };

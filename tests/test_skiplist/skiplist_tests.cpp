@@ -3,7 +3,7 @@
 class SkipListTest : public BlissIndexTest {};
 
 
-TEST_F(SkipListTest, TestArt_Sanity) {
+TEST_F(SkipListTest, TestSkipList_Sanity) {
     index.reset(new bliss::BlissSkipListIndex<key_type, key_type>());
     std::vector<key_type> data;
     int key = 100'000;

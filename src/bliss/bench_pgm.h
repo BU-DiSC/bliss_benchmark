@@ -12,7 +12,6 @@ namespace bliss {
 template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissPGMIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
-    // pgm::PGMIndex<int, epsilon> _index();
     pgm::DynamicPGMIndex<KEY_TYPE, VALUE_TYPE> _index;
     BlissPGMIndex() : _index(){};
 

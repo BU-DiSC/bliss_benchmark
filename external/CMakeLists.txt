@@ -33,7 +33,7 @@ FetchContent_MakeAvailable(cxxopts)
 
 FetchContent_Declare(
     alex
-    GIT_REPOSITORY https://github.com/microsoft/ALEX.git
+    GIT_REPOSITORY https://github.com/microsoft/ALEX
     GIT_TAG master
 )
 FetchContent_GetProperties(alex)
@@ -71,3 +71,30 @@ endif()
 
 add_library(tlx INTERFACE)
 target_include_directories(tlx INTERFACE ${tlx_SOURCE_DIR}/)
+
+
+
+FetchContent_Declare(
+    leveldb
+    GIT_REPOSITORY https://github.com/google/leveldb
+    GIT_TAG main
+)
+FetchContent_GetProperties(leveldb)
+if (NOT leveldb_POPULATED)
+    FetchContent_Populate(leveldb)
+endif()
+
+# add_library(leveldb INTERFACE)
+# add_library(leveldb STATIC IMPORTED)
+# target_include_directories(leveldb INTERFACE ${leveldb_SOURCE_DIR}/include)
+set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+set(LEVELDB_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(LEVELDB_BUILD_BENCHMARKS OFF CACHE BOOL "" FORCE)
+
+add_subdirectory(${leveldb_SOURCE_DIR} ${leveldb_BINARY_DIR})
+
+# add_subdirectory(${leveldb_SOURCE_DIR} ${leveldb_BINARY_DIR})
+# set_target_properties(leveldb PROPERTIES
+#     IMPORTED_LOCATION "${leveldb_BINARY_DIR}/libleveldb.a"
+#     INTERFACE_INCLUDE_DIRECTORIES "${leveldb_SOURCE_DIR}/include"
+# )

@@ -71,3 +71,17 @@ endif()
 
 add_library(tlx INTERFACE)
 target_include_directories(tlx INTERFACE ${tlx_SOURCE_DIR}/)
+
+
+FetchContent_Declare(
+        byteslice
+        GIT_REPOSITORY https://github.com/altramarine/ByteSlice.git
+        GIT_TAG master
+)
+FetchContent_GetProperties(byteslice)
+if (NOT byteslice_POPULATED)
+    FetchContent_Populate(byteslice)
+endif()
+
+add_library(byteslice INTERFACE)
+target_include_directories(byteslice INTERFACE ${byteslice_SOURCE_DIR})

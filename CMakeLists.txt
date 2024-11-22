@@ -63,6 +63,7 @@ target_link_libraries(bliss PUBLIC
     alex
     lipp
     tlx
+    byteslice
 )
 
 target_include_directories(bliss PUBLIC

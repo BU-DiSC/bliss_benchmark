@@ -11,6 +11,9 @@ class BlissIndex {
    public:
     virtual void bulkload(std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values);
     virtual bool get(KEY_TYPE key) = 0;
+    virtual uint32_t * get(VALUE_TYPE start, VALUE_TYPE end) {
+        std::runtime_error("get(VALUE_TYPE start, VALUE_TYPE end) is not yet implemented");
+    };
     virtual void put(KEY_TYPE key, VALUE_TYPE value) = 0;
     virtual void end_routine() = 0;
 };

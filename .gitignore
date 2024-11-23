@@ -189,15 +189,19 @@ cython_debug/
 .cache
 build
 
-# IDE
+# IDE - VSCode
 .vscode/
 script/infra/__pycache__
 results.db
 data/*.data
 *.bin
 
+# IDE - IntelliJ
 .idea
 cmake-build-debug/
 src/bliss/.idea/
 
+# OS - MacOS
 db_working_home
+
+

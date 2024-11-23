@@ -20,7 +20,8 @@ class BlissBTreeIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
         this->_index.bulk_load(values.begin(), values.end());
     }
 
-    bool get(KEY_TYPE key) override { return this->_index.exists(key); }
+    bool get(KEY_TYPE key) override {
+        return this->_index.exists(key); }
 
     void put(KEY_TYPE key, VALUE_TYPE value) override {
         this->_index.insert(std::make_pair(key, value));

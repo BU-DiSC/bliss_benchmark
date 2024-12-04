@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "bliss/bliss_index.h"
-#include <column_imprints.h>
+#include "column_imprints.h"
 #include <string>
 
 namespace bliss {

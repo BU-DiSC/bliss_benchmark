@@ -82,9 +82,18 @@ FetchContent_GetProperties(byteslice)
 if (NOT byteslice_POPULATED)
     FetchContent_Populate(byteslice)
 endif()
+
+add_compile_options(-mavx2 -m64 -fopenmp)
+# FetchContent_MakeAvailable(byteslice)
 file(GLOB_RECURSE byteslice_SOURCES
-    "${byteslice_SOURCE_DIR}/src/*.cpp"
+   "${byteslice_SOURCE_DIR}/src/*.cpp"
 )
-add_library(byteslice INTERFACE ${byteslice_SOURCES})
-target_include_directories(byteslice INTERFACE ${byteslice_SOURCE_DIR})
+
+add_library(byteslice STATIC ${byteslice_SOURCES})
+target_include_directories(byteslice PUBLIC ${byteslice_SOURCE_DIR}/)
+# OpenMP is required for byteslice
+find_package(OpenMP REQUIRED)
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(byteslice PRIVATE OpenMP::OpenMP_CXX)
+endif()
 # add_library(byteslice STATIC ${byteslice_Sources})

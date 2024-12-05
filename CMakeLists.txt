@@ -87,7 +87,7 @@ target_include_directories(bliss PUBLIC
 # HEADER bliss
 #   Executable and linking libraries
 # =============================================================================
-add_executable(bliss_bench src/bliss_bench.cpp)
+add_executable(bliss_bench src/bliss_bench.cpp ${byteslice_SOURCES})
 
 target_link_libraries(bliss_bench PUBLIC
     bliss

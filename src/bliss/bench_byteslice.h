@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "bliss/bliss_index.h"
-#include <src/byteslice.h>
+#include "src/byteslice.h"
 #include <string>
 
 namespace bliss {

@@ -82,6 +82,9 @@ FetchContent_GetProperties(byteslice)
 if (NOT byteslice_POPULATED)
     FetchContent_Populate(byteslice)
 endif()
-
-add_library(byteslice INTERFACE)
+file(GLOB_RECURSE byteslice_SOURCES
+    "${byteslice_SOURCE_DIR}/src/*.cpp"
+)
+add_library(byteslice INTERFACE ${byteslice_SOURCES})
 target_include_directories(byteslice INTERFACE ${byteslice_SOURCE_DIR})
+# add_library(byteslice STATIC ${byteslice_Sources})

@@ -4,11 +4,15 @@
 #include <gtest/gtest.h>
 #include <lipp.h>
 #include <spdlog/common.h>
+#include "include/pgm/pgm_index_dynamic.hpp"
 
 #include <cxxopts.hpp>
 #include <iostream>
 #include <string>
+#include <algorithm>
+#include <random>
 
+#include "bliss/bench_pgm.h"
 #include "bliss/bench_alex.h"
 #include "bliss/bench_btree.h"
 #include "bliss/bench_lipp.h"
@@ -27,7 +31,7 @@ using value_type = unsigned long;
 class BlissIndexTest : public testing::Test {
    protected:
     std::unique_ptr<bliss::BlissIndex<key_type, value_type>> index;
-    std::string indexes[3] = {"alex", "lipp", "btree"};
+    std::string indexes[4] = {"alex", "lipp", "btree", "pgm"};
     int num_keys = 100000;
 
     void SetUp() {}
@@ -38,7 +42,9 @@ class BlissIndexTest : public testing::Test {
             data.push_back(i);
         }
         if (!sorted) {
-            std::random_shuffle(data.begin(), data.end());
+            std::random_device rd;
+            std::mt19937 g(rd());
+            std::shuffle(data.begin(), data.end(), g);
         }
     }
 };

@@ -2,7 +2,7 @@
 The purpose of this program is to benchmark the sortedness performance on various indexes.\
 This research project is part of the [Data-intensive Systems and Computing (DiSC) lab](https://disc.bu.edu/) at Boston University.
 
-[![Basic Tests for BLISS Benchmark](https://github.com/BU-DiSC/bliss_benchmark/actions/workflows/cmake-single-platform.yml/badge.svg)](https://github.com/BU-DiSC/bliss_benchmark/actions/workflows/cmake-single-platform.yml)
+[![Basic Tests](https://github.com/BU-DiSC/bliss_benchmark/actions/workflows/cmake-single-platform.yml/badge.svg)](https://github.com/BU-DiSC/bliss_benchmark/actions/workflows/cmake-single-platform.yml)
 
 ## Dependencies & Components
 1. ```cmake``` >= `3.10`

@@ -1,11 +1,13 @@
 #include <alex.h>
 #include <lipp.h>
 #include <spdlog/common.h>
+#include "include/pgm/pgm_index_dynamic.hpp"
 
 #include <cxxopts.hpp>
 #include <iostream>
 #include <string>
 
+#include "bliss/bench_pgm.h"
 #include "bliss/bench_alex.h"
 #include "bliss/bench_art.h"
 #include "bliss/bench_btree.h"
@@ -171,6 +173,8 @@ int main(int argc, char *argv[]) {
         index.reset(new bliss::BlissBTreeIndex<key_type, value_type>());
     } else if (config.index == "art") {
         index.reset(new bliss::BlissARTIndex<key_type, value_type>());
+    } else if (config.index == "pgm") {
+        index.reset(new bliss::BlissPGMIndex<key_type, value_type>());
     } else {
         spdlog::error(config.index + " not implemented yet", 1);
     }

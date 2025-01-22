@@ -48,7 +48,7 @@ target_include_directories(alex INTERFACE ${alex_SOURCE_DIR}/src/core)
 
 FetchContent_Declare(
     lipp
-    GIT_REPOSITORY https://github.com/Jiacheng-WU/lipp
+    GIT_REPOSITORY https://github.com/Jiacheng-WU/lipp.git
     GIT_TAG main
 )
 FetchContent_GetProperties(lipp)
@@ -72,6 +72,7 @@ endif()
 add_library(tlx INTERFACE)
 target_include_directories(tlx INTERFACE ${tlx_SOURCE_DIR}/)
 
+<<<<<<< HEAD
 # Adaptive Radix Tree 
 FetchContent_Declare(
     art
@@ -85,3 +86,20 @@ endif()
 
 add_library(art INTERFACE)
 target_include_directories(art INTERFACE ${art_SOURCE_DIR})
+=======
+
+
+
+FetchContent_Declare(
+    pgm
+    GIT_REPOSITORY https://github.com/gvinciguerra/PGM-index
+    GIT_TAG master
+)
+FetchContent_GetProperties(pgm)
+if (NOT pgm_POPULATED)
+    FetchContent_Populate(pgm)
+endif()
+
+add_library(pgm INTERFACE)
+target_include_directories(pgm INTERFACE ${pgm_SOURCE_DIR})
+>>>>>>> b87c2bfe42113c67d2b6db98089d5c63c1ec745b

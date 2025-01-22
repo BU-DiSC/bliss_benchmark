@@ -33,7 +33,7 @@ class BlissIndexTest : public testing::Test
 {
   protected:
     std::unique_ptr<bliss::BlissIndex<key_type, value_type>> index;
-    std::string indexes[4] = {"alex", "lipp", "btree", "pgm", "art"};
+    std::string indexes[5] = {"alex", "lipp", "btree", "pgm", "art"};
     int num_keys = 100000;
 
     void SetUp()

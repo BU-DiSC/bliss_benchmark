@@ -1,5 +1,6 @@
 #include <alex.h>
 #include <lipp.h>
+#include "skip_list.h"
 #include <spdlog/common.h>
 #include "include/pgm/pgm_index_dynamic.hpp"
 
@@ -12,6 +13,7 @@
 #include "bliss/bench_art.h"
 #include "bliss/bench_btree.h"
 #include "bliss/bench_lipp.h"
+#include "bliss/bench_skiplist.h"
 #include "bliss/bliss_index.h"
 #include "bliss/util/args.h"
 #include "bliss/util/config.h"
@@ -171,6 +173,8 @@ int main(int argc, char *argv[]) {
         index.reset(new bliss::BlissLippIndex<key_type, value_type>());
     } else if (config.index == "btree") {
         index.reset(new bliss::BlissBTreeIndex<key_type, value_type>());
+    } else if (config.index == "skiplist") {
+        index.reset(new bliss::BlissSkipListIndex<key_type, value_type>());
     } else if (config.index == "art") {
         index.reset(new bliss::BlissARTIndex<key_type, value_type>());
     } else if (config.index == "pgm") {

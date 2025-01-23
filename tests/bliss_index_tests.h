@@ -11,11 +11,14 @@
 #include <iostream>
 #include <random>
 #include <string>
+#include <algorithm>
+#include <random>
 
 #include "bliss/bench_alex.h"
 #include "bliss/bench_art.h"
 #include "bliss/bench_btree.h"
 #include "bliss/bench_lipp.h"
+#include "bliss/bench_skiplist.h"
 #include "bliss/bench_pgm.h"
 #include "bliss/bliss_index.h"
 #include "bliss/util/args.h"
@@ -33,7 +36,8 @@ class BlissIndexTest : public testing::Test
 {
   protected:
     std::unique_ptr<bliss::BlissIndex<key_type, value_type>> index;
-    std::string indexes[5] = {"alex", "lipp", "btree", "pgm", "art"};
+    std::string indexes[6] = {"alex", "lipp", "btree", "skiplist", "pgm", "art"};
+
     int num_keys = 100000;
 
     void SetUp()
@@ -46,8 +50,7 @@ class BlissIndexTest : public testing::Test
         {
             data.push_back(i);
         }
-        if (!sorted)
-        {
+        if (!sorted) {
             std::random_device rd;
             std::mt19937 g(rd());
             std::shuffle(data.begin(), data.end(), g);

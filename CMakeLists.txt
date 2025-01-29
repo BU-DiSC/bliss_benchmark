@@ -69,6 +69,7 @@ target_link_libraries(bliss PUBLIC
     skiplist
     pgm
     art
+    bptree
 )
 
 target_include_directories(bliss PUBLIC
@@ -82,6 +83,8 @@ target_compile_options(bliss PUBLIC
     "-fexceptions"
     "-fasynchronous-unwind-tables"
     "-march=native"
+    "-O3"
+    "-DNDEBUG"
 )
 
 target_include_directories(bliss PUBLIC

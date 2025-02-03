@@ -170,7 +170,7 @@ int main(int argc, char *argv[]) {
     } else if (config.index == "btree") {
         index.reset(new bliss::BlissBTreeIndex<key_type, value_type>());
     } else if (config.index == "imprints") {
-        index.reset(new bliss::BlissImprintsIndex<key_type, value_type>(64, 64));
+        index.reset(new bliss::BlissImprintsIndex<key_type, value_type>(/* block_size */64, /* max_bins */64));
     } else {
         spdlog::error(config.index + " not implemented yet", 1);
     }

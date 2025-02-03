@@ -14,7 +14,6 @@ class BlissImprintsIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
     BlissImprintsIndex(int blocksize = 64, int maxbins = 64, std::string type_name = std::string("unsigned long")) : blocksize_(blocksize), maxbins_(maxbins) {
         imprints_ = new Imprints<VALUE_TYPE>(blocksize, maxbins, type_name);
-        // std::cout << "column initiated" << std::endl;
     };
 
     ~BlissImprintsIndex()  {
@@ -23,9 +22,6 @@ class BlissImprintsIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     
     void bulkload(
         std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values) override {
-        // expects the pairs to be pre-sorted before performing bulk load
-        // this->_index.bulk_load(values.begin(), values.end());
-        // binning()
         std::vector<VALUE_TYPE> vals;
         for(auto x: values) {
             vals.push_back(x.second);

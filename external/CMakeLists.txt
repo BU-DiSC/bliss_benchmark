@@ -115,3 +115,18 @@ endif()
 
 add_library(pgm INTERFACE)
 target_include_directories(pgm INTERFACE ${pgm_SOURCE_DIR})
+
+# wheatman/BP-Tree
+FetchContent_Declare(
+    bptree
+    GIT_REPOSITORY https://github.com/wheatman/BP-Tree.git
+    GIT_TAG main
+)
+
+FetchContent_GetProperties(bptree)
+if(NOT bptree_POPULATED)
+    FetchContent_Populate(bptree)
+endif()
+
+add_library(bptree INTERFACE)
+target_include_directories(bptree INTERFACE ${bptree_SOURCE_DIR})

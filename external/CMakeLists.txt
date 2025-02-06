@@ -33,7 +33,7 @@ FetchContent_MakeAvailable(cxxopts)
 
 FetchContent_Declare(
     alex
-    GIT_REPOSITORY https://github.com/microsoft/ALEX.git
+    GIT_REPOSITORY https://github.com/microsoft/ALEX
     GIT_TAG master
 )
 FetchContent_GetProperties(alex)
@@ -48,7 +48,7 @@ target_include_directories(alex INTERFACE ${alex_SOURCE_DIR}/src/core)
 
 FetchContent_Declare(
     lipp
-    GIT_REPOSITORY https://github.com/Jiacheng-WU/lipp
+    GIT_REPOSITORY https://github.com/Jiacheng-WU/lipp.git
     GIT_TAG main
 )
 FetchContent_GetProperties(lipp)
@@ -97,3 +97,45 @@ if(OpenMP_CXX_FOUND)
     target_link_libraries(byteslice PRIVATE OpenMP::OpenMP_CXX)
 endif()
 # add_library(byteslice STATIC ${byteslice_Sources})
+FetchContent_Declare(
+    skiplist
+    GIT_REPOSITORY https://github.com/petegoodliffe/skip_list
+    GIT_TAG master
+)
+FetchContent_GetProperties(skiplist)
+if (NOT skiplist_POPULATED)
+    FetchContent_Populate(skiplist)
+endif()
+
+add_library(skiplist INTERFACE)
+target_include_directories(skiplist INTERFACE ${skiplist_SOURCE_DIR})
+
+
+# Adaptive Radix Tree 
+FetchContent_Declare(
+    art
+    GIT_REPOSITORY https://github.com/BU-DiSC/ART
+    GIT_TAG main
+)
+FetchContent_GetProperties(art)
+if (NOT art_POPULATED)
+    FetchContent_Populate(art)
+endif()
+
+add_library(art INTERFACE)
+target_include_directories(art INTERFACE ${art_SOURCE_DIR})
+
+
+
+FetchContent_Declare(
+    pgm
+    GIT_REPOSITORY https://github.com/gvinciguerra/PGM-index
+    GIT_TAG master
+)
+FetchContent_GetProperties(pgm)
+if (NOT pgm_POPULATED)
+    FetchContent_Populate(pgm)
+endif()
+
+add_library(pgm INTERFACE)
+target_include_directories(pgm INTERFACE ${pgm_SOURCE_DIR})

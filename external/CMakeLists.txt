@@ -83,12 +83,12 @@ if (NOT byteslice_POPULATED)
     FetchContent_Populate(byteslice)
 endif()
 
-add_compile_options(-mavx2 -m64 -fopenmp)
+
 # FetchContent_MakeAvailable(byteslice)
 file(GLOB_RECURSE byteslice_SOURCES
    "${byteslice_SOURCE_DIR}/src/*.cpp"
 )
-
+add_compile_options(-mavx2 -m64 -fopenmp)
 add_library(byteslice STATIC ${byteslice_SOURCES})
 target_include_directories(byteslice PUBLIC ${byteslice_SOURCE_DIR}/)
 # OpenMP is required for byteslice
@@ -97,6 +97,7 @@ if(OpenMP_CXX_FOUND)
     target_link_libraries(byteslice PRIVATE OpenMP::OpenMP_CXX)
 endif()
 # add_library(byteslice STATIC ${byteslice_Sources})
+
 FetchContent_Declare(
     skiplist
     GIT_REPOSITORY https://github.com/petegoodliffe/skip_list

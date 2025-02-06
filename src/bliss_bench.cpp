@@ -176,7 +176,6 @@ int main(int argc, char *argv[]) {
         index.reset(new bliss::BlissBTreeIndex<key_type, value_type>());
     } else if (config.index == "byteslice") {
         index.reset(new bliss::BlissByteSliceIndex<key_type, value_type>());
-    }else {
     } else if (config.index == "skiplist") {
         index.reset(new bliss::BlissSkipListIndex<key_type, value_type>());
     } else if (config.index == "art") {

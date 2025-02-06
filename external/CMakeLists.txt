@@ -86,10 +86,17 @@ endif()
 file(GLOB_RECURSE columnsketches_SOURCES
    "${columnsketches_SOURCE_DIR}/src/*.cpp"
 )
-add_compile_options(-pthread -mavx -mavx2 -msse -msse2 -O3)
 add_library(columnsketches STATIC ${columnsketches_SOURCES})
 target_include_directories(columnsketches PUBLIC ${columnsketches_SOURCE_DIR}/include)
 target_link_libraries(columnsketches PUBLIC pthread)
+target_compile_options(columnsketches PUBLIC 
+  "-pthread"
+  "-mavx"
+  "-mavx2"
+  "-msse"
+  "-msse2"
+  "-O3"
+)
 
 
 # FetchContent_MakeAvailable(columnsketches)

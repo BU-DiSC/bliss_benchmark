@@ -13,7 +13,6 @@ template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissByteSliceIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
     BlissByteSliceIndex(int numrows = 1000000, int numbits = 32) {
-        // std::cout << "column initiated" << std::endl;
         byteslice_ = new ByteSlice(numrows, numbits);
     };
 
@@ -23,16 +22,10 @@ class BlissByteSliceIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     
     void bulkload(
         std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values) override {
-        // expects the pairs to be pre-sorted before performing bulk load
-        // this->_index.bulk_load(values.begin(), values.end());
-        // binning()
-        // std::vector<VALUE_TYPE> vals;
         int i = 0;
         for(auto x: values) {
             byteslice_->setTuple(i, static_cast<unsigned long long>(x.second));
-            // vals.push_back(x.second);
         }
-        // imprints_->bulkload(vals);
     }
 
 

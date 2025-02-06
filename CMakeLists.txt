@@ -52,6 +52,9 @@ add_library(bliss OBJECT
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_alex.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_btree.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_imprints.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/bench_skiplist.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/bench_pgm.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/bench_art.h
 )
 
 target_compile_features(bliss PUBLIC
@@ -64,7 +67,13 @@ target_link_libraries(bliss PUBLIC
     alex
     lipp
     tlx
+<<<<<<< HEAD
     imprints
+=======
+    skiplist
+    pgm
+    art
+>>>>>>> 92615345b27bee160b0af305c6ffc0870d9725b1
 )
 
 target_include_directories(bliss PUBLIC

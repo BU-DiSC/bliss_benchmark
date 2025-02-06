@@ -17,4 +17,9 @@ target_include_directories(bliss_test_infra PUBLIC
 add_subdirectory(test_alex)
 add_subdirectory(test_lipp)
 add_subdirectory(test_btree)
+<<<<<<< HEAD
 add_subdirectory(test_imprints)
+=======
+add_subdirectory(test_skiplist)
+add_subdirectory(test_art)
+>>>>>>> 92615345b27bee160b0af305c6ffc0870d9725b1

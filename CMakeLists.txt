@@ -52,6 +52,7 @@ add_library(bliss OBJECT
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_alex.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_btree.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_skiplist.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/bench_byteslice.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_pgm.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_art.h
 )
@@ -93,7 +94,7 @@ target_include_directories(bliss PUBLIC
 # HEADER bliss
 #   Executable and linking libraries
 # =============================================================================
-add_executable(bliss_bench src/bliss_bench.cpp ${byteslice_SOURCES})
+add_executable(bliss_bench src/bliss_bench.cpp)
 
 target_link_libraries(bliss_bench PUBLIC
     bliss

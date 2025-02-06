@@ -15,7 +15,7 @@ namespace bliss {
 template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissLevelDBIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
  public:
-  leveldb::DB* db_;
+  leveldb::DB* _db;
 
 
   BlissLevelDBIndex() {
@@ -23,7 +23,7 @@ class BlissLevelDBIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     options.create_if_missing = true;
 
     std::string db_path = "/tmp/bliss_leveldb_index";
-    leveldb::Status status = leveldb::DB::Open(options, db_path, &db_);
+    leveldb::Status status = leveldb::DB::Open(options, db_path, &_db);
     if (!status.ok()) {
       std::cerr << "Failed to open LevelDB at " << db_path << ": "
                 << status.ToString() << std::endl;
@@ -42,7 +42,7 @@ class BlissLevelDBIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
   bool get(KEY_TYPE key) override {
     std::string key_str = to_string(key);
     std::string value;
-    leveldb::Status status = db_->Get(leveldb::ReadOptions(), key_str, &value);
+    leveldb::Status status = _db->Get(leveldb::ReadOptions(), key_str, &value);
     return status.ok();
   }
 
@@ -50,7 +50,7 @@ class BlissLevelDBIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
   void put(KEY_TYPE key, VALUE_TYPE value) override {
     std::string key_str = to_string(key);
     std::string value_str = to_string(value);
-    leveldb::Status status = db_->Put(leveldb::WriteOptions(), key_str, value_str);
+    leveldb::Status status = _db->Put(leveldb::WriteOptions(), key_str, value_str);
     if (!status.ok()) {
       std::cerr << "LevelDB put error: " << status.ToString() << std::endl;
     }
@@ -58,7 +58,7 @@ class BlissLevelDBIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
 
 
   void end_routine() override {
-    delete db_;
+    delete _db;
   }
 
  private:

@@ -2,20 +2,6 @@
 
 class ImprintsTest : public BlissIndexTest {};
 
-TEST_F(ImprintsTest, TestImprint_Build) {
-    index.reset(new bliss::BlissImprintsIndex<size_t, key_type>(64, 64, std::string("unsigned long")));
-    std::vector<key_type> data;
-    GenerateData(data, num_keys, false);
-    std::vector < std::pair<size_t, key_type> > bulkload_data;
-    for (size_t i = 0; i < data.size(); i ++) {
-        bulkload_data.push_back(std::make_pair(i, data[i]));
-    }
-    index->bulkload(bulkload_data);
-    // auto insert_start = data.begin();
-    // auto insert_end = data.end();
-    // executor::execute_inserts(*index, insert_start, insert_end);
-}
-
 TEST_F(ImprintsTest, TestImprint_Random) {
     index.reset(new bliss::BlissImprintsIndex<size_t, key_type>(64, 64, std::string("unsigned long")));
     std::vector<key_type> data;

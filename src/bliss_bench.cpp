@@ -13,6 +13,7 @@
 #include "bliss/bench_art.h"
 #include "bliss/bench_btree.h"
 #include "bliss/bench_lipp.h"
+#include "bliss/bench_leveldb.h"
 #include "bliss/bench_skiplist.h"
 #include "bliss/bliss_index.h"
 #include "bliss/util/args.h"
@@ -179,6 +180,8 @@ int main(int argc, char *argv[]) {
         index.reset(new bliss::BlissARTIndex<key_type, value_type>());
     } else if (config.index == "pgm") {
         index.reset(new bliss::BlissPGMIndex<key_type, value_type>());
+    } else if (config.index == "leveldb") {
+        index.reset(new bliss::BlissLevelDBIndex<key_type, value_type>());
     } else {
         spdlog::error(config.index + " not implemented yet", 1);
     }

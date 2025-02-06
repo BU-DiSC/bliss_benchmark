@@ -174,11 +174,9 @@ int main(int argc, char *argv[]) {
         index.reset(new bliss::BlissLippIndex<key_type, value_type>());
     } else if (config.index == "btree") {
         index.reset(new bliss::BlissBTreeIndex<key_type, value_type>());
-<<<<<<< HEAD
     } else if (config.index == "byteslice") {
         index.reset(new bliss::BlissByteSliceIndex<key_type, value_type>());
     }else {
-=======
     } else if (config.index == "skiplist") {
         index.reset(new bliss::BlissSkipListIndex<key_type, value_type>());
     } else if (config.index == "art") {
@@ -186,7 +184,6 @@ int main(int argc, char *argv[]) {
     } else if (config.index == "pgm") {
         index.reset(new bliss::BlissPGMIndex<key_type, value_type>());
     } else {
->>>>>>> 92615345b27bee160b0af305c6ffc0870d9725b1
         spdlog::error(config.index + " not implemented yet", 1);
     }
 

@@ -18,12 +18,9 @@
 #include "bliss/bench_art.h"
 #include "bliss/bench_btree.h"
 #include "bliss/bench_lipp.h"
-<<<<<<< HEAD
 #include "bliss/bench_imprints.h"
-=======
 #include "bliss/bench_skiplist.h"
 #include "bliss/bench_pgm.h"
->>>>>>> 92615345b27bee160b0af305c6ffc0870d9725b1
 #include "bliss/bliss_index.h"
 #include "bliss/util/args.h"
 #include "bliss/util/config.h"

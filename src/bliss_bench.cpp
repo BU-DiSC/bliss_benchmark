@@ -174,17 +174,14 @@ int main(int argc, char *argv[]) {
         index.reset(new bliss::BlissLippIndex<key_type, value_type>());
     } else if (config.index == "btree") {
         index.reset(new bliss::BlissBTreeIndex<key_type, value_type>());
-<<<<<<< HEAD
     } else if (config.index == "imprints") {
         index.reset(new bliss::BlissImprintsIndex<key_type, value_type>(/* block_size */64, /* max_bins */64));
-=======
     } else if (config.index == "skiplist") {
         index.reset(new bliss::BlissSkipListIndex<key_type, value_type>());
     } else if (config.index == "art") {
         index.reset(new bliss::BlissARTIndex<key_type, value_type>());
     } else if (config.index == "pgm") {
         index.reset(new bliss::BlissPGMIndex<key_type, value_type>());
->>>>>>> 92615345b27bee160b0af305c6ffc0870d9725b1
     } else {
         spdlog::error(config.index + " not implemented yet", 1);
     }

@@ -67,13 +67,10 @@ target_link_libraries(bliss PUBLIC
     alex
     lipp
     tlx
-<<<<<<< HEAD
     imprints
-=======
     skiplist
     pgm
     art
->>>>>>> 92615345b27bee160b0af305c6ffc0870d9725b1
 )
 
 target_include_directories(bliss PUBLIC

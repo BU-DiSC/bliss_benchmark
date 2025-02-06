@@ -72,7 +72,6 @@ endif()
 add_library(tlx INTERFACE)
 target_include_directories(tlx INTERFACE ${tlx_SOURCE_DIR}/)
 
-<<<<<<< HEAD
 # find_package(Boost REQUIRED)
 FetchContent_Declare(
         imprints
@@ -86,7 +85,6 @@ endif()
 
 add_library(imprints INTERFACE)
 target_include_directories(imprints INTERFACE ${imprints_SOURCE_DIR}/include)
-=======
 
 FetchContent_Declare(
     skiplist
@@ -130,4 +128,3 @@ endif()
 
 add_library(pgm INTERFACE)
 target_include_directories(pgm INTERFACE ${pgm_SOURCE_DIR})
->>>>>>> 92615345b27bee160b0af305c6ffc0870d9725b1

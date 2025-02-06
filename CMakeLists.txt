@@ -52,6 +52,9 @@ add_library(bliss OBJECT
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_alex.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_btree.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_columnsketches.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/bench_skiplist.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/bench_pgm.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/bench_art.h
 )
 
 target_compile_features(bliss PUBLIC
@@ -65,6 +68,9 @@ target_link_libraries(bliss PUBLIC
     lipp
     tlx
     columnsketches
+    skiplist
+    pgm
+    art
 )
 
 target_include_directories(bliss PUBLIC

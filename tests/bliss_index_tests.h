@@ -34,8 +34,8 @@ using value_type = unsigned long;
 class BlissIndexTest : public testing::Test {
    protected:
     std::unique_ptr<bliss::BlissIndex<key_type, value_type>> index;
-    std::string indexes[6] = {"alex",     "lipp", "btree",
-                              "skiplist", "pgm",  "art"};
+    std::string indexes[7] = {"alex", "lipp", "btree", "skiplist",
+                              "pgm",  "art",  "bptree"};
 
     int num_keys = 100000;
 

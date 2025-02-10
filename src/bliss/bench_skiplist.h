@@ -24,6 +24,8 @@ class BlissSkipListIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
 
     bool get(KEY_TYPE key) override { return _index.find(key) != _index.end(); }
 
+    bool get(KEY_TYPE start, KEY_TYPE end) override { throw std::runtime_error("Not implemented"); }
+
     void put(KEY_TYPE key, VALUE_TYPE value) override { _index.insert(key); }
 
     void end_routine() override {}

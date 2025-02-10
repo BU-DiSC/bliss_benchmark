@@ -12,7 +12,7 @@ template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissBTreeIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
     tlx::btree_map<KEY_TYPE, VALUE_TYPE> _index;
-    BlissBTreeIndex() : _index(){};
+    BlissBTreeIndex() : _index() {};
 
     void bulkload(
         std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values) override {
@@ -20,8 +20,11 @@ class BlissBTreeIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
         this->_index.bulk_load(values.begin(), values.end());
     }
 
-    bool get(KEY_TYPE key) override {
-        return this->_index.exists(key); }
+    bool get(KEY_TYPE key) override { return this->_index.exists(key); }
+
+    bool get(KEY_TYPE start, KEY_TYPE end) override {
+        throw std::runtime_error("Not implemented");
+    }
 
     void put(KEY_TYPE key, VALUE_TYPE value) override {
         this->_index.insert(std::make_pair(key, value));

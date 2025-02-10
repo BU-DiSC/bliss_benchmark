@@ -21,6 +21,10 @@ class BlissLippIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
         return _index.exists(key) ? "true" : "false";
     }
 
+    bool get(KEY_TYPE start, KEY_TYPE end) override {
+        throw std::runtime_error("Not implemented");
+    }
+
     void put(KEY_TYPE key, VALUE_TYPE value) override {
         _index.insert(key, value);
     }

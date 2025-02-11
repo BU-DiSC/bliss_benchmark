@@ -8,3 +8,5 @@ jobs:
     - uses: actions/checkout@v4
     - name: Run clang-format style check for C/C++/Protobuf programs.
       uses: jidicula/clang-format-action@v4.14.0
+      with: 
+        fallback-style: {Google, IndentWidth: 4}

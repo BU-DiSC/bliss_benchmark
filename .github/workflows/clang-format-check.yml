@@ -9,4 +9,4 @@ jobs:
     - name: Run clang-format style check for C/C++/Protobuf programs.
       uses: jidicula/clang-format-action@v4.14.0
       with: 
-        style: {BasedOnStyle: Google, IndentWidth: 4}
+        style: file

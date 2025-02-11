@@ -10,3 +10,4 @@ jobs:
       uses: jidicula/clang-format-action@v4.14.0
       with:
         fallback-style: Google
+        clang-format-version: 18

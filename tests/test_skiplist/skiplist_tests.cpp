@@ -2,7 +2,6 @@
 
 class SkipListTest : public BlissIndexTest {};
 
-
 TEST_F(SkipListTest, TestSkipList_Sanity) {
     index.reset(new bliss::BlissSkipListIndex<key_type, key_type>());
     std::vector<key_type> data;
@@ -11,7 +10,6 @@ TEST_F(SkipListTest, TestSkipList_Sanity) {
     index->put(key, value);
     EXPECT_TRUE(index->get(key));
 }
-
 
 TEST_F(SkipListTest, TestSkipList_Sorted) {
     index.reset(new bliss::BlissSkipListIndex<key_type, key_type>());
@@ -26,7 +24,6 @@ TEST_F(SkipListTest, TestSkipList_Sorted) {
         EXPECT_TRUE(index->get(key));
     }
 }
-
 
 TEST_F(SkipListTest, TestSkipList_Random) {
     index.reset(new bliss::BlissSkipListIndex<key_type, key_type>());

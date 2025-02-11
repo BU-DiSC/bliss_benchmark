@@ -5,7 +5,6 @@
 
 #include "bliss/bliss_index.h"
 #include "tlx/container/btree_map.hpp"
-
 namespace bliss {
 
 template <typename KEY_TYPE, typename VALUE_TYPE>

@@ -1,13 +1,11 @@
-name: clang-format Check
-on: [push, pull_request]
+name: Clang Format Checker
+on: [push]
 jobs:
-  formatting-check:
-    name: Formatting Check
+  clang-format-checking:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Run clang-format style check for C/C++/Protobuf programs.
-      uses: jidicula/clang-format-action@v4.14.0
-      with:
-        fallback-style: Google
-        clang-format-version: 18
+      - uses: actions/checkout@v2
+      - uses: RafikFarhad/clang-format-github-action@v3
+        with:
+          sources: "src/**/*.h,src/**/*.c,test/**/*.c"
+          style: "file"

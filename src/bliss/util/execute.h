@@ -45,5 +45,4 @@ void execute_non_empty_reads(bliss::BlissIndex<key_type, value_type> &tree,
 }  // namespace executor
 }  // namespace utils
 }  // namespace bliss
-
 #endif

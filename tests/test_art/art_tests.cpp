@@ -2,7 +2,6 @@
 
 class ArtTest : public BlissIndexTest {};
 
-
 TEST_F(ArtTest, TestArt_Sanity) {
     index.reset(new bliss::BlissARTIndex<key_type, key_type>());
     std::vector<key_type> data;
@@ -11,7 +10,6 @@ TEST_F(ArtTest, TestArt_Sanity) {
     index->put(key, value);
     EXPECT_TRUE(index->get(key));
 }
-
 
 TEST_F(ArtTest, TestArt_Sorted) {
     index.reset(new bliss::BlissARTIndex<key_type, key_type>());

@@ -4,6 +4,10 @@ project(bliss_benchmark VERSION 1.0
                         LANGUAGES CXX
 )
 
+set(BUILD_TESTING OFF CACHE BOOL "Disable testing" FORCE)
+set(LEVELDB_BUILD_TESTS OFF CACHE BOOL "Disable LevelDB tests" FORCE)
+
+
 include(ExternalProject)
 message(STATUS "CXX : ${CMAKE_CXX_COMPILER}")
 set(CMAKE_CXX_STANDARD 17)
@@ -58,6 +62,7 @@ add_library(bliss OBJECT
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_skiplist.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_pgm.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_art.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/bench_leveldb.h
 )
 
 target_compile_features(bliss PUBLIC
@@ -108,3 +113,9 @@ add_executable(bliss_bench src/bliss_bench.cpp)
 target_link_libraries(bliss_bench PUBLIC
     bliss
 )
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/external/leveldb_bliss)
+target_include_directories(bliss PUBLIC ${CMAKE_SOURCE_DIR}/external/leveldb_bliss/include)
+target_link_libraries(bliss PRIVATE leveldb)
+
+include_directories(${CMAKE_SOURCE_DIR}/external/leveldb_bliss/include)

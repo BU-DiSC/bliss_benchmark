@@ -28,8 +28,11 @@ class BlissColumnSketchesIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
         columnsketches_->create(&vals[0], vals.size(), vals.size());
     }
 
-    unsigned int * get(VALUE_TYPE low, VALUE_TYPE high) {
-        return columnsketches_->query_ge_lt(low, high);
+    bool get(VALUE_TYPE start, VALUE_TYPE end) {
+        uint32_t *res = columnsketches_->query_ge_lt(start, end);
+        bool succeed = res != nullptr;
+        if(succeed) delete res;
+        return succeed;
     }
 
     bool get(KEY_TYPE key) override { 

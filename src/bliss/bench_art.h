@@ -27,9 +27,12 @@ class BlissARTIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     bool get(KEY_TYPE key) override {
         uint8_t ARTkey[KEY_SIZE];
         ART::loadKey(key, ARTkey);
-        ART::ArtNode* leaf =
-            ART::lookup(_index, ARTkey, KEY_SIZE, 0, KEY_SIZE);
+        ART::ArtNode* leaf = ART::lookup(_index, ARTkey, KEY_SIZE, 0, KEY_SIZE);
         return leaf != nullptr && ART::isLeaf(leaf);
+    }
+
+    bool get(KEY_TYPE start, KEY_TYPE end) override {
+        throw std::runtime_error("Not implemented");
     }
 
     void put(KEY_TYPE key, VALUE_TYPE value) override {

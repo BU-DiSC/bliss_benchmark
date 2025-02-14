@@ -11,9 +11,8 @@ namespace bliss {
 template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissSkipListIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
-
     goodliffe::skip_list<KEY_TYPE> _index;
-    BlissSkipListIndex() : _index(){};
+    BlissSkipListIndex() : _index() {};
 
     void bulkload(
         std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values) override {
@@ -23,6 +22,10 @@ class BlissSkipListIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     }
 
     bool get(KEY_TYPE key) override { return _index.find(key) != _index.end(); }
+
+    bool get(KEY_TYPE start, KEY_TYPE end) override {
+        throw std::runtime_error("Not implemented");
+    }
 
     void put(KEY_TYPE key, VALUE_TYPE value) override { _index.insert(key); }
 

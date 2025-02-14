@@ -2,7 +2,6 @@
 
 class PGMTest : public BlissIndexTest {};
 
-
 TEST_F(PGMTest, TestPGM_Sanity) {
     index.reset(new bliss::PGMIndex<key_type, key_type>());
     std::vector<key_type> data;
@@ -11,7 +10,6 @@ TEST_F(PGMTest, TestPGM_Sanity) {
     index->put(key, value);
     EXPECT_TRUE(index->get(key));
 }
-
 
 TEST_F(PGMTest, TestPGM_Sorted) {
     index.reset(new bliss::PGMIndex<key_type, key_type>());
@@ -26,7 +24,6 @@ TEST_F(PGMTest, TestPGM_Sorted) {
         EXPECT_TRUE(index->get(key));
     }
 }
-
 
 TEST_F(PGMTest, TestPGM_Random) {
     index.reset(new bliss::PGMIndex<key_type, key_type>());

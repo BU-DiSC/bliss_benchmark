@@ -1,18 +1,18 @@
 #include "bliss_index_tests.h"
 
-class SkipListTest : public BlissIndexTest {};
+class LevelDBTest : public BlissIndexTest {};
 
-TEST_F(SkipListTest, TestSkipList_Sanity) {
-    index.reset(new bliss::BlissSkipListIndex<key_type, key_type>());
+TEST_F(LevelDBTest, TestLevelDB_Sanity) {
+    index.reset(new bliss::BlissLevelDBIndex<key_type, key_type>());
     std::vector<key_type> data;
-    int key = 100'000;
-    int value = 123'456;
+    int key = 100;
+    int value = 123;
     index->put(key, value);
     EXPECT_TRUE(index->get(key));
 }
 
-TEST_F(SkipListTest, TestSkipList_Sorted) {
-    index.reset(new bliss::BlissSkipListIndex<key_type, key_type>());
+TEST_F(LevelDBTest, TestLevelDB_Sorted) {
+    index.reset(new bliss::BlissLevelDBIndex<key_type, key_type>());
     std::vector<key_type> data;
     GenerateData(data, num_keys);
 
@@ -25,8 +25,8 @@ TEST_F(SkipListTest, TestSkipList_Sorted) {
     }
 }
 
-TEST_F(SkipListTest, TestSkipList_Random) {
-    index.reset(new bliss::BlissSkipListIndex<key_type, key_type>());
+TEST_F(LevelDBTest, TestLevelDB_Random) {
+    index.reset(new bliss::BlissLevelDBIndex<key_type, key_type>());
     std::vector<key_type> data;
     GenerateData(data, num_keys, false);
 

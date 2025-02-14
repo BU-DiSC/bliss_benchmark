@@ -1,19 +1,18 @@
 #include <alex.h>
 #include <lipp.h>
-#include "skip_list.h"
 #include <spdlog/common.h>
-#include "include/pgm/pgm_index_dynamic.hpp"
 
 #include <cxxopts.hpp>
 #include <iostream>
 #include <string>
 
-#include "bliss/bench_pgm.h"
 #include "bliss/bench_alex.h"
 #include "bliss/bench_art.h"
 #include "bliss/bench_btree.h"
+#include "bliss/bench_leveldb.h"
 #include "bliss/bench_lipp.h"
 #include "bliss/bench_columnsketches.h"
+#include "bliss/bench_pgm.h"
 #include "bliss/bench_skiplist.h"
 #include "bliss/bliss_index.h"
 #include "bliss/util/args.h"
@@ -21,6 +20,8 @@
 #include "bliss/util/execute.h"
 #include "bliss/util/reader.h"
 #include "bliss/util/timer.h"
+#include "include/pgm/pgm_index_dynamic.hpp"
+#include "skip_list.h"
 
 using namespace bliss::utils;
 
@@ -187,6 +188,8 @@ int main(int argc, char *argv[]) {
         index.reset(new bliss::BlissARTIndex<key_type, value_type>());
     } else if (config.index == "pgm") {
         index.reset(new bliss::BlissPGMIndex<key_type, value_type>());
+    } else if (config.index == "leveldb") {
+        index.reset(new bliss::BlissLevelDBIndex<key_type, value_type>());
     } else {
         spdlog::error(config.index + " not implemented yet", 1);
     }

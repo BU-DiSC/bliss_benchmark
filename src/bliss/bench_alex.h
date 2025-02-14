@@ -26,6 +26,10 @@ class BlissAlexIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
         return it != _index.end();
     }
 
+    bool get(KEY_TYPE start, KEY_TYPE end) override {
+        throw std::runtime_error("Not implemented");
+    }
+
     void put(KEY_TYPE key, VALUE_TYPE value) override {
         _index.insert(key, value);
     }

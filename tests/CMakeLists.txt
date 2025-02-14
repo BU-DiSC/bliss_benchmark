@@ -19,3 +19,5 @@ add_subdirectory(test_lipp)
 add_subdirectory(test_btree)
 add_subdirectory(test_skiplist)
 add_subdirectory(test_art)
+add_subdirectory(test_leveldb)
+

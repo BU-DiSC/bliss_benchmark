@@ -27,7 +27,7 @@ class BlissPGMIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
         return it != _index.end();
     }
 
-    bool get(KEY_TYPE start, KEY_TYPE end) override {
+    uint32_t * get(KEY_TYPE start, KEY_TYPE end) override {
         throw std::runtime_error("Not implemented");
     }
 

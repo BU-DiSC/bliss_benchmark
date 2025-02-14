@@ -11,14 +11,19 @@ template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissLippIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
     LIPP<KEY_TYPE, VALUE_TYPE> _index;
-    BlissLippIndex() : _index(){};
+    BlissLippIndex() : _index() {};
 
-    void bulkload(std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values) override {
+    void bulkload(
+        std::vector<std::pair<KEY_TYPE, VALUE_TYPE>> values) override {
         this->_index.bulk_load(values.data(), values.size());
     }
 
     bool get(KEY_TYPE key) override {
         return _index.exists(key) ? "true" : "false";
+    }
+
+    bool get(KEY_TYPE start, KEY_TYPE end) override {
+        throw std::runtime_error("Not implemented");
     }
 
     void put(KEY_TYPE key, VALUE_TYPE value) override {

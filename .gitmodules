@@ -5,3 +5,6 @@
 	path = external/rocksdb
 	url = git@github.com:BU-DiSC/rocksdb.git
 	branch = sortedness
+[submodule "external/leveldb_bliss"]
+	path = external/leveldb_bliss
+	url = git@github.com:JslYoon/leveldb_bliss.git

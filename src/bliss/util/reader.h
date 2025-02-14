@@ -48,6 +48,6 @@ std::vector<KEY_TYPE> read_file_binary(const char *filename) {
     return data;
 }
 
-}
+}  // namespace bliss
 
 #endif

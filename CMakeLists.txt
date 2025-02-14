@@ -42,6 +42,9 @@ add_subdirectory(tests)
 # HEADER bliss
 #   Bliss lib files
 # =============================================================================
+
+option(COMPILE_COLUMNSKETCHES "compile_column_sketches" OFF)
+
 add_library(bliss OBJECT
     ${CMAKE_SOURCE_DIR}/src/bliss/util/timer.h
     ${CMAKE_SOURCE_DIR}/src/bliss/util/reader.h
@@ -72,6 +75,12 @@ target_link_libraries(bliss PUBLIC
     pgm
     art
 )
+
+if(COMPILE_COLUMNSKETCHES)
+    target_link_libraries(bliss PUBLIC
+        columnsketches
+    )
+endif()
 
 target_include_directories(bliss PUBLIC
     ${CMAKE_SOURCE_DIR}/src

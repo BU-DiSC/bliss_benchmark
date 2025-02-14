@@ -175,7 +175,12 @@ int main(int argc, char *argv[]) {
     } else if (config.index == "btree") {
         index.reset(new bliss::BlissBTreeIndex<key_type, value_type>());
     } else if (config.index == "columnskteches") {
+#ifdef COMPILE_COLUMNSKETCHES
         index.reset(new bliss::BlissColumnSketchesIndex<key_type, value_type>());
+#else
+        std::runtime_error("Column Sketches is not Imported");
+        exit(0);
+#endif
     } else if (config.index == "skiplist") {
         index.reset(new bliss::BlissSkipListIndex<key_type, value_type>());
     } else if (config.index == "art") {

@@ -1,6 +1,6 @@
 #ifndef BLISS_BENCH_COLUMNSKETCHES
 #define BLISS_BENCH_COLUMNSKETCHES
-
+#ifdef COMPILE_COLUMNSKETCHES
 #include <vector>
 
 #include "bliss/bliss_index.h"
@@ -49,5 +49,5 @@ class BlissColumnSketchesIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
 };
 
 }  // namespace bliss
-
+#endif
 #endif  // !BLISS_BENCH_BTREE

@@ -29,8 +29,11 @@ class BlissByteSliceIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     }
 
 
-    unsigned int * get(VALUE_TYPE low, VALUE_TYPE high) {
-        return byteslice_->query(static_cast<unsigned long long>(low), static_cast<unsigned long long>(high));
+    bool get(VALUE_TYPE low, VALUE_TYPE high) {
+        uint32_t * result = byteslice_->query(static_cast<unsigned long long>(low), static_cast<unsigned long long>(high));
+        bool check_ = result != nullptr;
+        if(check_) delete result;
+        return check_;
     }
 
     bool get(KEY_TYPE key) override { 

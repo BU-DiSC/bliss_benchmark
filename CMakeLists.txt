@@ -75,7 +75,6 @@ target_link_libraries(bliss PUBLIC
     alex
     lipp
     tlx
-    columnsketches
     skiplist
     pgm
     art

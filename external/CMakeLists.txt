@@ -115,3 +115,18 @@ endif()
 
 add_library(pgm INTERFACE)
 target_include_directories(pgm INTERFACE ${pgm_SOURCE_DIR})
+
+
+
+FetchContent_Declare(
+    csbtree
+    GIT_REPOSITORY https://github.com/Arjunbala/CSBTreesConcurrency
+    GIT_TAG master
+)
+FetchContent_GetProperties(csbtree)
+if (NOT csbtree_POPULATED)
+    FetchContent_Populate(csbtree)
+endif()
+
+add_library(csbtree INTERFACE)
+target_include_directories(csbtree INTERFACE ${csbtree_SOURCE_DIR})

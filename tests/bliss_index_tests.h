@@ -18,6 +18,7 @@
 #include "bliss/bench_lipp.h"
 #include "bliss/bench_pgm.h"
 #include "bliss/bench_skiplist.h"
+#include "bliss/bench_csbtree.h"
 #include "bliss/bliss_index.h"
 #include "bliss/util/args.h"
 #include "bliss/util/config.h"
@@ -34,8 +35,8 @@ using value_type = unsigned long;
 class BlissIndexTest : public testing::Test {
    protected:
     std::unique_ptr<bliss::BlissIndex<key_type, value_type>> index;
-    std::string indexes[7] = {"alex", "lipp", "btree",  "skiplist",
-                              "pgm",  "art",  "leveldb"};
+    std::string indexes[8] = {"alex", "lipp", "btree",  "skiplist",
+                              "pgm",  "art",  "leveldb", "csbtree"};
 
     int num_keys = 100000;
 

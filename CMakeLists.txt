@@ -59,6 +59,7 @@ add_library(bliss OBJECT
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_pgm.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_art.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_leveldb.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/bench_csbtree.h
 )
 
 target_compile_features(bliss PUBLIC
@@ -74,6 +75,7 @@ target_link_libraries(bliss PUBLIC
     skiplist
     pgm
     art
+    csbtree
 )
 
 target_include_directories(bliss PUBLIC

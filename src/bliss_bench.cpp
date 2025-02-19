@@ -9,6 +9,7 @@
 #include "bliss/bench_alex.h"
 #include "bliss/bench_art.h"
 #include "bliss/bench_btree.h"
+#include "bliss/bench_csbtree.h"
 #include "bliss/bench_leveldb.h"
 #include "bliss/bench_lipp.h"
 #include "bliss/bench_pgm.h"

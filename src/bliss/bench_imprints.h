@@ -30,8 +30,17 @@ class BlissImprintsIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     }
 
 
-    unsigned int * get(VALUE_TYPE low, VALUE_TYPE high) {
-        return imprints_->range_scan(low, high);
+    bool get(VALUE_TYPE start, VALUE_TYPE end) {
+        unsigned int * res = imprints_->range_scan(start, end);
+        if(res != nullptr) {
+            delete res;
+            return true;
+        } else
+            return false;
+    }
+
+    uint32_t * get_bitmask(VALUE_TYPE start, VALUE_TYPE end) {
+        return imprints_->range_scan(start, end);
     }
 
     bool get(KEY_TYPE key) override { 

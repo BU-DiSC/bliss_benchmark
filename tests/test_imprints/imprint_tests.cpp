@@ -14,7 +14,8 @@ TEST_F(ImprintsTest, TestImprint_Random) {
     auto minimum = 0;
     for (size_t key = 0; key < num_keys; key += std::max(1,num_keys / 20)) {
         uint32_t *result = nullptr;
-        result = index->get(minimum, data[key]);
+        bliss::BlissImprintsIndex<size_t, key_type> * index_copy = (bliss::BlissImprintsIndex<size_t, key_type> *)index.get();
+        result = (index_copy)->get_bitmask(minimum, data[key]);
         for(size_t i = 0; i < num_keys; i ++) {
             if((result[i / 32] >> (i & 31)) & 1u) {
                 EXPECT_TRUE(data[i] <= data[key] && data[i] > minimum);

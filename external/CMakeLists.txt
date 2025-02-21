@@ -72,7 +72,6 @@ endif()
 add_library(tlx INTERFACE)
 target_include_directories(tlx INTERFACE ${tlx_SOURCE_DIR}/)
 
-# find_package(Boost REQUIRED)
 FetchContent_Declare(
         imprints
         GIT_REPOSITORY https://github.com/altramarine/imprints.git
@@ -82,9 +81,36 @@ FetchContent_GetProperties(imprints)
 if (NOT imprints_POPULATED)
     FetchContent_Populate(imprints)
 endif()
-
 add_library(imprints INTERFACE)
 target_include_directories(imprints INTERFACE ${imprints_SOURCE_DIR}/include)
+
+FetchContent_Declare(
+        columnsketches
+        GIT_REPOSITORY https://github.com/altramarine/ColumnSketches-cpp.git
+        GIT_TAG main
+)
+
+if(COMPILE_COLUMNSKETCHES)
+    FetchContent_GetProperties(columnsketches)
+    if (NOT columnsketches_POPULATED)
+        FetchContent_Populate(columnsketches)
+    endif()
+    file(GLOB_RECURSE columnsketches_SOURCES
+    "${columnsketches_SOURCE_DIR}/src/*.cpp"
+    )
+    add_library(columnsketches STATIC ${columnsketches_SOURCES})
+    target_include_directories(columnsketches PUBLIC ${columnsketches_SOURCE_DIR}/include)
+    target_link_libraries(columnsketches PUBLIC pthread)
+    target_compile_options(columnsketches PUBLIC 
+    "-pthread"
+    "-mavx"
+    "-mavx2"
+    "-msse"
+    "-msse2"
+    "-O3"
+    "-DCOMPILE_COLUMNSKETCHES=1"
+    )
+endif()
 
 FetchContent_Declare(
     skiplist

@@ -1,11 +1,12 @@
 #ifndef BLISS_EXECUTE_H
 #define BLISS_EXECUTE_H
 
+#include <spdlog/spdlog.h>
+
+#include <cmath>
 #include <iostream>
 #include <random>
 #include <vector>
-#include <cmath>
-#include <spdlog/spdlog.h>
 
 #include "bliss/bliss_index.h"
 

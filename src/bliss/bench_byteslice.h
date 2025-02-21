@@ -13,7 +13,7 @@ template <typename KEY_TYPE, typename VALUE_TYPE>
 class BlissByteSliceIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
    public:
     BlissByteSliceIndex(int numrows = 1000000, int numbits = 32) {
-        byteslice_ = new ByteSlice(numrows, numbits);
+        byteslice_ = new byteslice::ByteSlice(numrows, numbits);
     };
 
     ~BlissByteSliceIndex()  {
@@ -29,8 +29,8 @@ class BlissByteSliceIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     }
 
 
-    bool get(VALUE_TYPE low, VALUE_TYPE high) {
-        uint32_t * result = byteslice_->query(static_cast<unsigned long long>(low), static_cast<unsigned long long>(high));
+    bool get(VALUE_TYPE start, VALUE_TYPE end) {
+        uint32_t * result = byteslice_->query(static_cast<unsigned long long>(start), static_cast<unsigned long long>(end));
         bool check_ = result != nullptr;
         if(check_) delete result;
         return check_;
@@ -48,7 +48,7 @@ class BlissByteSliceIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
 
     void end_routine() override {}
   private:
-    ByteSlice *byteslice_;
+    byteslice::ByteSlice *byteslice_;
 };
 
 }  // namespace bliss

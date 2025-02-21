@@ -12,6 +12,7 @@
 #include "bliss/bench_leveldb.h"
 #include "bliss/bench_lipp.h"
 #include "bliss/bench_byteslice.h"
+#include "bliss/bench_columnsketches.h"
 #include "bliss/bench_pgm.h"
 #include "bliss/bench_skiplist.h"
 #include "bliss/bliss_index.h"
@@ -20,6 +21,7 @@
 #include "bliss/util/execute.h"
 #include "bliss/util/reader.h"
 #include "bliss/util/timer.h"
+#include "bliss/bench_imprints.h"
 #include "include/pgm/pgm_index_dynamic.hpp"
 #include "skip_list.h"
 
@@ -177,6 +179,15 @@ int main(int argc, char *argv[]) {
         index.reset(new bliss::BlissBTreeIndex<key_type, value_type>());
     } else if (config.index == "byteslice") {
         index.reset(new bliss::BlissByteSliceIndex<key_type, value_type>());
+    } else if (config.index == "imprints") {
+        index.reset(new bliss::BlissImprintsIndex<key_type, value_type>(/* block_size */64, /* max_bins */64));
+    } else if (config.index == "columnskteches") {
+#ifdef COMPILE_COLUMNSKETCHES
+        index.reset(new bliss::BlissColumnSketchesIndex<key_type, value_type>());
+#else
+        std::runtime_error("Column Sketches is not Imported");
+        exit(0);
+#endif
     } else if (config.index == "skiplist") {
         index.reset(new bliss::BlissSkipListIndex<key_type, value_type>());
     } else if (config.index == "art") {

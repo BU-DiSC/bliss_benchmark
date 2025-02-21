@@ -16,6 +16,8 @@
 #include "bliss/bench_btree.h"
 #include "bliss/bench_leveldb.h"
 #include "bliss/bench_lipp.h"
+#include "bliss/bench_imprints.h"
+#include "bliss/bench_skiplist.h"
 #include "bliss/bench_pgm.h"
 #include "bliss/bench_skiplist.h"
 #include "bliss/bliss_index.h"

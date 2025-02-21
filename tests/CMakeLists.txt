@@ -17,6 +17,7 @@ target_include_directories(bliss_test_infra PUBLIC
 add_subdirectory(test_alex)
 add_subdirectory(test_lipp)
 add_subdirectory(test_btree)
+add_subdirectory(test_imprints)
 add_subdirectory(test_skiplist)
 add_subdirectory(test_art)
 add_subdirectory(test_leveldb)

@@ -20,6 +20,7 @@
 #include "bliss/util/execute.h"
 #include "bliss/util/reader.h"
 #include "bliss/util/timer.h"
+#include "bliss/bench_imprints.h"
 #include "include/pgm/pgm_index_dynamic.hpp"
 #include "skip_list.h"
 
@@ -175,6 +176,8 @@ int main(int argc, char *argv[]) {
         index.reset(new bliss::BlissLippIndex<key_type, value_type>());
     } else if (config.index == "btree") {
         index.reset(new bliss::BlissBTreeIndex<key_type, value_type>());
+    } else if (config.index == "imprints") {
+        index.reset(new bliss::BlissImprintsIndex<key_type, value_type>(/* block_size */64, /* max_bins */64));
     } else if (config.index == "columnskteches") {
 #ifdef COMPILE_COLUMNSKETCHES
         index.reset(new bliss::BlissColumnSketchesIndex<key_type, value_type>());

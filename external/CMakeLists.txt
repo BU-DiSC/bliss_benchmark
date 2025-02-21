@@ -73,6 +73,18 @@ add_library(tlx INTERFACE)
 target_include_directories(tlx INTERFACE ${tlx_SOURCE_DIR}/)
 
 FetchContent_Declare(
+        imprints
+        GIT_REPOSITORY https://github.com/altramarine/imprints.git
+        GIT_TAG cmake-version
+)
+FetchContent_GetProperties(imprints)
+if (NOT imprints_POPULATED)
+    FetchContent_Populate(imprints)
+endif()
+add_library(imprints INTERFACE)
+target_include_directories(imprints INTERFACE ${imprints_SOURCE_DIR}/include)
+
+FetchContent_Declare(
         columnsketches
         GIT_REPOSITORY https://github.com/altramarine/ColumnSketches-cpp.git
         GIT_TAG main

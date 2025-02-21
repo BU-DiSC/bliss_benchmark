@@ -11,6 +11,7 @@
 #include "bliss/bench_btree.h"
 #include "bliss/bench_leveldb.h"
 #include "bliss/bench_lipp.h"
+#include "bliss/bench_byteslice.h"
 #include "bliss/bench_columnsketches.h"
 #include "bliss/bench_pgm.h"
 #include "bliss/bench_skiplist.h"
@@ -176,6 +177,8 @@ int main(int argc, char *argv[]) {
         index.reset(new bliss::BlissLippIndex<key_type, value_type>());
     } else if (config.index == "btree") {
         index.reset(new bliss::BlissBTreeIndex<key_type, value_type>());
+    } else if (config.index == "byteslice") {
+        index.reset(new bliss::BlissByteSliceIndex<key_type, value_type>());
     } else if (config.index == "imprints") {
         index.reset(new bliss::BlissImprintsIndex<key_type, value_type>(/* block_size */64, /* max_bins */64));
     } else if (config.index == "columnskteches") {

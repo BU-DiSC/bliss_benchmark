@@ -61,6 +61,7 @@ add_library(bliss OBJECT
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_imprints.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_columnsketches.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_skiplist.h
+    ${CMAKE_SOURCE_DIR}/src/bliss/bench_byteslice.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_pgm.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_art.h
     ${CMAKE_SOURCE_DIR}/src/bliss/bench_leveldb.h
@@ -76,6 +77,7 @@ target_link_libraries(bliss PUBLIC
     alex
     lipp
     tlx
+    byteslice
     imprints
     skiplist
     pgm

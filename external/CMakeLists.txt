@@ -113,6 +113,32 @@ if(COMPILE_COLUMNSKETCHES)
 endif()
 
 FetchContent_Declare(
+        byteslice
+        GIT_REPOSITORY https://github.com/altramarine/ByteSlice.git
+        GIT_TAG master
+)
+FetchContent_GetProperties(byteslice)
+
+if (NOT byteslice_POPULATED)
+    FetchContent_Populate(byteslice)
+endif()
+file(GLOB_RECURSE byteslice_SOURCES
+   ${byteslice_SOURCE_DIR}/src/*.cpp
+)
+add_library(byteslice STATIC ${byteslice_SOURCES})
+target_include_directories(byteslice PUBLIC ${byteslice_SOURCE_DIR}/)
+# OpenMP is required for byteslice
+find_package(OpenMP REQUIRED)
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(byteslice PRIVATE OpenMP::OpenMP_CXX)
+endif()
+target_compile_options(byteslice PUBLIC
+    "-mavx2"
+    "-m64"
+    "-fopenmp"
+)
+
+FetchContent_Declare(
     skiplist
     GIT_REPOSITORY https://github.com/petegoodliffe/skip_list
     GIT_TAG master

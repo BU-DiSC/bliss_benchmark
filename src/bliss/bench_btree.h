@@ -22,7 +22,9 @@ class BlissBTreeIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     bool get(KEY_TYPE key) override { return this->_index.exists(key); }
 
     bool get(KEY_TYPE start, KEY_TYPE end) override {
-        throw std::runtime_error("Not implemented");
+        auto start_it = this->_index.lower_bound(start);
+        auto end_it = this->_index.upper_bound(end);
+        return start_it != end_it;
     }
 
     void put(KEY_TYPE key, VALUE_TYPE value) override {

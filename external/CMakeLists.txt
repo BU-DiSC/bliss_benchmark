@@ -180,3 +180,14 @@ endif()
 
 add_library(pgm INTERFACE)
 target_include_directories(pgm INTERFACE ${pgm_SOURCE_DIR})
+
+option(ENABLE_BODS "Enable bods" OFF)
+if(ENABLE_BODS)
+    ExternalProject_Add(
+        bods
+        SOURCE_DIR ${CMAKE_SOURCE_DIR}/external/bods
+        BINARY_DIR ${CMAKE_BINARY_DIR}/bods
+        BUILD_ALWAYS ON  # Always build to ensure updates
+        INSTALL_COMMAND ""
+    )
+endif()

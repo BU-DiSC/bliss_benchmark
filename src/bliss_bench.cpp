@@ -82,6 +82,15 @@ std::vector<std::pair<key_type, value_type>> create_preload_vec(
     return vec;
 }
 
+void display_bliss_config(const config::BlissConfig &config) {
+    spdlog::info("Preload Factor: {}", config.preload_factor);
+    spdlog::info("Write Factor: {}", config.write_factor);
+    spdlog::info("Read Factor: {}", config.read_factor);
+    spdlog::info("Mixed Read/Write Ratio: {}", config.mixed_read_write_ratio);
+    spdlog::info("Range Query Factor: {}", config.range_query_factor);
+    spdlog::info("Selectivity Factor: {}", config.selectivity_factor);
+}
+
 void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
                        std::vector<key_type> &data,
                        const config::BlissConfig &config, const int seed) {
@@ -90,6 +99,7 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
     size_t num_writes = std::round(config.write_factor * data.size());
     size_t num_mixed = num_inserts - (num_preload + num_writes);
     size_t num_reads = std::round(config.read_factor * data.size());
+    size_t num_ranges = std::round(config.range_query_factor * data.size());
 
     // Timing for preloading index
     spdlog::debug("Preloading {} items", num_preload);
@@ -143,6 +153,16 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
         executor::execute_non_empty_reads(tree, data, num_reads, seed);
     });
     spdlog::info("Read Time (ns): {}", read_time);
+
+    // Timing for range queries with configured amount
+    if (num_ranges > 0) {
+        spdlog::debug("Executing {} range queries", num_ranges);
+        auto range_time = time_function([&]() {
+            executor::execute_range_queries(tree, data, num_ranges, 
+                                          config.selectivity_factor);
+        });
+        spdlog::info("Range Query Time (ns): {}", range_time);
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -157,7 +177,7 @@ int main(int argc, char *argv[]) {
         default:
             spdlog::set_level(spdlog::level::info);
     }
-    display_config(config);
+    display_bliss_config(config);
 
     std::vector<key_type> data;
     if (config.file_type == "binary") {

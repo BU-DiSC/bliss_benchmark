@@ -27,7 +27,10 @@ class BlissAlexIndex : public BlissIndex<KEY_TYPE, VALUE_TYPE> {
     }
 
     bool get(KEY_TYPE start, KEY_TYPE end) override {
-        throw std::runtime_error("Not implemented");
+        auto it_start = _index.lower_bound(start);
+        auto it_end = _index.lower_bound(end);
+        // Return true if there are any elements in the range
+        return it_start != _index.end() && it_start != it_end;
     }
 
     void put(KEY_TYPE key, VALUE_TYPE value) override {

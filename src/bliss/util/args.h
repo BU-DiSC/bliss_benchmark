@@ -36,7 +36,11 @@ BlissConfig parse_args(int argc, char *argv[]) {
             "file_type", "Input file type [binary | txt]",
             cxxopts::value<std::string>()->default_value("txt"))(
             "use_preload", "Use index defined preload",
-            cxxopts::value<bool>()->default_value("false"));
+            cxxopts::value<bool>()->default_value("false"))(
+            "range-query", "Range query factor",
+            cxxopts::value<double>()->default_value("0.0"))(
+            "selectivity", "Selectivity factor (percentage of domain)",
+            cxxopts::value<double>()->default_value("0.01"));
 
         auto result = options.parse(argc, argv);
         config = {
@@ -51,6 +55,8 @@ BlissConfig parse_args(int argc, char *argv[]) {
             .index = result["index"].as<std::string>(),
             .file_type = result["file_type"].as<std::string>(),
             .use_preload = result["use_preload"].as<bool>(),
+            .range_query_factor = result["range-query"].as<double>(),
+            .selectivity_factor = result["selectivity"].as<double>(),
         };
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;

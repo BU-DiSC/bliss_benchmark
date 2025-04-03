@@ -7,6 +7,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
+#include <algorithm>
 
 #include "bliss/bliss_index.h"
 
@@ -40,6 +41,26 @@ void execute_non_empty_reads(bliss::BlissIndex<key_type, value_type> &tree,
     for (int i = 0; i < num_reads; ++i) {
         size_t key_idx = dist(gen);
         tree.get(data.at(key_idx));
+    }
+}
+
+void execute_range_queries(bliss::BlissIndex<key_type, value_type> &tree,
+                          const std::vector<key_type> &data, int num_queries,
+                          double selectivity = 0.01, int seed = 0) {
+    spdlog::trace("Executing Range Queries");
+    std::mt19937 gen(seed);
+    std::uniform_int_distribution<size_t> key_dist(0, data.size() - 1);
+    
+    key_type data_range = *std::max_element(data.begin(), data.end()) - 
+                          *std::min_element(data.begin(), data.end());
+    key_type avg_range_size = static_cast<key_type>(data_range * selectivity);
+    
+    for (int i = 0; i < num_queries; ++i) {
+        size_t start_idx = key_dist(gen);
+        key_type start_key = data.at(start_idx);
+        key_type end_key = start_key + avg_range_size;
+        
+        tree.get(start_key, end_key);
     }
 }
 

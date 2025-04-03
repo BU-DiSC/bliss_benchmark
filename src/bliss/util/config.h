@@ -19,6 +19,8 @@ struct BlissConfig {
     std::string index;
     std::string file_type;
     bool use_preload;
+    double range_query_factor = 0.0;
+    double selectivity_factor = 0.01;
 };
 
 void display_config(BlissConfig config) {
@@ -30,6 +32,9 @@ void display_config(BlissConfig config) {
     spdlog::trace("Verbosity {}", config.verbosity);
     spdlog::trace("Index: {}", config.index);
     spdlog::trace("File type: {}", config.file_type);
+    spdlog::trace("Use Preload: {}", config.use_preload);
+    spdlog::trace("Range Query Factor: {}", config.range_query_factor);
+    spdlog::trace("Selectivity Factor: {}", config.selectivity_factor);
 }
 }  // namespace config
 }  // namespace utils

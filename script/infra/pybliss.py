@@ -67,6 +67,8 @@ class PyBliss:
             f"--seed {args.seed}",
             f"--file_type {'binary' if args.file_type else 'txt'}",
             "--use_preload" if args.use_preload else "",
+            f"--selectivity ${args.selectivity.join(",")}",
+            f"--range_query_factor ${args.range_query_factor}",
         ]
         process = subprocess.Popen(
             " ".join(cmd),

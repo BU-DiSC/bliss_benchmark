@@ -148,13 +148,24 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
     // Timing for range queries with configured amount
     if (num_ranges > 0) {
         spdlog::debug("Executing {} range queries", num_ranges);
-        auto range_time = time_function([&]() {
-            executor::execute_range_queries(tree, data, num_ranges, 
-                                          config.selectivity_factor);
-        });
-        spdlog::info("Range Query Time (ns): {}", range_time);
+        for (const auto& selectivity : config.selectivity_factor) {
+            auto range_time = time_function([&]() {
+                executor::execute_range_queries(tree, data, num_ranges, selectivity);
+            });
+            try {
+                index->get(0, 0);
+            } catch (const std::exception& e) {
+                if (std::string(e.what()) == "Not implemented") {
+                    range_time = 0;
+                } else {
+                    throw;
+                }
+            }
+            spdlog::info("Range Query Time (ns) for selectivity {}: {}", selectivity, range_time);
+        }
     }
 }
+
 
 int main(int argc, char *argv[]) {
     auto config = args::parse_args(argc, argv);

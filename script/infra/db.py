@@ -25,7 +25,10 @@ class BlissDB:
                 preload_creation_time INT,
                 write_time INT,
                 mixed_time INT,
-                read_time INT
+                read_time INT,
+                range_read_time_short INT,
+                range_read_time_mid INT,
+                range_read_time_long INT,
             );
             """
         )
@@ -56,8 +59,11 @@ class BlissDB:
                    preload_creation_time,
                    write_time,
                    mixed_time,
-                   read_time
-               ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+                   read_time,
+                   range_read_time_short,
+                   range_read_time_mid,
+                   range_read_time_long
+               ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
             """,
             (
                 datetime.now(timezone.utc),
@@ -75,6 +81,9 @@ class BlissDB:
                 stats.write_time,
                 stats.mixed_time,
                 stats.read_time,
+                stats.range_read_time_short,
+                stats.range_read_time_mid,
+                stats.range_read_time_long,
             ),
         )
         self.db_con.commit()

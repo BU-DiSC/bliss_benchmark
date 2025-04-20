@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 import re
 import os
 import logging
@@ -14,6 +15,8 @@ class BlissArgs:
     write_factor: float
     read_factor: float
     mixed_ratio: float
+    range_query_factor: float
+    selectivity: List[str]
     seed: int = 0
     file_type: str = "binary"
     use_preload: bool = False
@@ -26,6 +29,9 @@ class BlissStats:
     write_time: int
     read_time: int
     mixed_time: int
+    range_read_time_short: int = 0
+    range_read_time_mid: int = 0
+    range_read_time_long: int = 0
 
 
 class PyBliss:
@@ -51,10 +57,13 @@ class PyBliss:
         self.preload_creation_time_regex = re.compile(
             r"\[[0-9 :.-]+\] \[info\] Preload Creation Time \(ns\): (\d+)"
         )
+        self.range_read_time_regex = re.compile(
+            r"\[[0-9 :.-]+\] \[info\] Range Query Times \(ns\) for selectivity \[([\d\., ]+)\]: ([\d\., ]+)"
+        )
 
     def run_single_bliss_bench(self, args: BlissArgs) -> BlissStats:
         if self.smoke_test:
-            return BlissStats(*(random.randint(0, 2 << 16) for _ in range(5)))
+            return BlissStats(*(random.randint(0, 2 << 16) for _ in range(8)))
 
         cmd = [
             self.bliss_execute_path,
@@ -67,8 +76,8 @@ class PyBliss:
             f"--seed {args.seed}",
             f"--file_type {'binary' if args.file_type else 'txt'}",
             "--use_preload" if args.use_preload else "",
-            f"--selectivity ${args.selectivity.join(",")}",
-            f"--range_query_factor ${args.range_query_factor}",
+            f"--selectivity " + ",".join(args.selectivity),
+            f"--range_query_factor {args.range_query_factor}",
         ]
         process = subprocess.Popen(
             " ".join(cmd),
@@ -95,6 +104,23 @@ class PyBliss:
         read_time = self.read_time_regex.search(proc_results)
         read_time = int(read_time.group(1)) if read_time else 0
 
+        # Extract range query times from the comma-separated list
+        range_times_match = self.range_read_time_regex.search(proc_results)
+        range_read_time_short = 0
+        range_read_time_mid = 0
+        range_read_time_long = 0
+        
+        if range_times_match:
+            range_times_str = range_times_match.group(2)
+            range_times = [int(x.strip()) for x in range_times_str.split(',')]
+            
+            if len(range_times) >= 1:
+                range_read_time_short = range_times[0]
+            if len(range_times) >= 2:
+                range_read_time_mid = range_times[1]
+            if len(range_times) >= 3:
+                range_read_time_long = range_times[2]
+
         os.makedirs("./run_logs", exist_ok=True)
         _, file_name = os.path.split(args.data_file)
         file_name, _ = os.path.splitext(file_name + f"_{args.index_type}")
@@ -107,4 +133,7 @@ class PyBliss:
             write_time=write_time,
             read_time=read_time,
             mixed_time=mixed_time,
+            range_read_time_short=range_read_time_short,
+            range_read_time_mid=range_read_time_mid,
+            range_read_time_long=range_read_time_long,
         )

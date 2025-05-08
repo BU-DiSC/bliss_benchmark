@@ -20,7 +20,7 @@ struct BlissConfig {
     std::string index;
     std::string file_type;
     bool use_preload;
-    double range_query_factor = 0.0;
+    double range_query_perc = 0.0;
     std::vector<double> selectivity_factor = {0.01};
 };
 
@@ -34,7 +34,7 @@ void display_config(BlissConfig config) {
     spdlog::trace("Index: {}", config.index);
     spdlog::trace("File type: {}", config.file_type);
     spdlog::trace("Use Preload: {}", config.use_preload);
-    spdlog::trace("Range Query Factor: {}", config.range_query_factor);
+    spdlog::trace("Range Query Factor: {}", config.range_query_perc);
     std::string selectivities;
     for (size_t i = 0; i < config.selectivity_factor.size(); ++i) {
         selectivities += std::to_string(config.selectivity_factor[i]);

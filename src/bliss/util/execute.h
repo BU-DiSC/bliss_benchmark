@@ -51,9 +51,9 @@ void execute_range_queries(bliss::BlissIndex<key_type, value_type> &tree,
     std::mt19937 gen(seed);
     std::uniform_int_distribution<size_t> key_dist(0, data.size() - 1);
     
-    key_type data_range = *std::max_element(data.begin(), data.end()) - 
+    key_type selected_data_range = *std::max_element(data.begin(), data.end()) - 
                           *std::min_element(data.begin(), data.end());
-    key_type avg_range_size = static_cast<key_type>(data_range * selectivity);
+    key_type avg_range_size = static_cast<key_type>(selected_data_range * selectivity);
     
     for (int i = 0; i < num_queries; ++i) {
         size_t start_idx = key_dist(gen);

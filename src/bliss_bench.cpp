@@ -90,7 +90,7 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
     size_t num_writes = std::round(config.write_factor * data.size());
     size_t num_mixed = num_inserts - (num_preload + num_writes);
     size_t num_reads = std::round(config.read_factor * data.size());
-    size_t num_ranges = std::round(config.range_query_factor * data.size());
+    size_t num_ranges = std::round(config.range_query_perc * data.size());
 
     // Timing for preloading index
     spdlog::debug("Preloading {} items", num_preload);

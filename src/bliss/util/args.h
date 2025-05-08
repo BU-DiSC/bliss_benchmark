@@ -3,6 +3,7 @@
 #include <cxxopts.hpp>
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "bliss/util/config.h"
 
@@ -36,9 +37,24 @@ BlissConfig parse_args(int argc, char *argv[]) {
             "file_type", "Input file type [binary | txt]",
             cxxopts::value<std::string>()->default_value("txt"))(
             "use_preload", "Use index defined preload",
-            cxxopts::value<bool>()->default_value("false"));
+            cxxopts::value<bool>()->default_value("false"))(
+            "range_query_perc", "Range query factor",
+            cxxopts::value<double>()->default_value("0.0"))(
+            "selectivity", "Selectivity factor(s) (comma-separated, percentage of domain)",
+            cxxopts::value<std::string>()->default_value("0.01"));
 
         auto result = options.parse(argc, argv);
+
+        // Parse selectivity factors
+        std::vector<double> selectivities;
+        std::string selectivity_str = result["selectivity"].as<std::string>();
+        size_t start = 0, end = 0;
+        while ((end = selectivity_str.find(',', start)) != std::string::npos) {
+            selectivities.push_back(std::stod(selectivity_str.substr(start, end - start)));
+            start = end + 1;
+        }
+        selectivities.push_back(std::stod(selectivity_str.substr(start)));
+
         config = {
             .data_file = result["data_file"].as<std::string>(),
             .preload_factor = result["preload_factor"].as<double>(),
@@ -51,6 +67,8 @@ BlissConfig parse_args(int argc, char *argv[]) {
             .index = result["index"].as<std::string>(),
             .file_type = result["file_type"].as<std::string>(),
             .use_preload = result["use_preload"].as<bool>(),
+            .range_query_perc = result["range_query_perc"].as<double>(),
+            .selectivity_factor = selectivities,
         };
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;

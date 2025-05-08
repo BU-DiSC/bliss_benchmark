@@ -12,6 +12,8 @@ PRELOAD_FACTOR = 0.4
 WRITE_FACTOR = 0.4
 READ_FACTOR = 0.2
 MIXED_RATIO = 0.5
+SELECTIVITY_FACTOR = ["0.01", "0.1", "0.25"]
+RANGE_QUERY_FACTOR = 0.5
 PRELOAD = False
 
 
@@ -27,6 +29,8 @@ def main(args):
         "file_type": "binary",
         "seed": 0,
         "use_preload": PRELOAD,
+        "range_query_factor": RANGE_QUERY_FACTOR,
+        "selectivity": SELECTIVITY_FACTOR,
     }
 
     exp_pairs = ((file, index) for file in files for index in INDEXES)

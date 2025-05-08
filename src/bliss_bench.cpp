@@ -90,6 +90,7 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
     size_t num_writes = std::round(config.write_factor * data.size());
     size_t num_mixed = num_inserts - (num_preload + num_writes);
     size_t num_reads = std::round(config.read_factor * data.size());
+    size_t num_ranges = std::round(config.range_query_perc * data.size());
 
     // Timing for preloading index
     spdlog::debug("Preloading {} items", num_preload);
@@ -143,7 +144,46 @@ void workload_executor(bliss::BlissIndex<key_type, value_type> &tree,
         executor::execute_non_empty_reads(tree, data, num_reads, seed);
     });
     spdlog::info("Read Time (ns): {}", read_time);
+
+    // Timing for range queries with configured amount
+    if (num_ranges > 0) {
+        spdlog::debug("Executing {} range queries", num_ranges);
+        std::vector<unsigned long long> range_times;
+        std::string selectivity_values;
+        
+        // Process all selectivity factors first
+        for (const auto& selectivity : config.selectivity_factor) {
+            auto range_time = 0ULL;
+            try {
+                range_time = time_function([&]() {
+                    executor::execute_range_queries(tree, data, num_ranges, selectivity);
+                });
+            } catch (const std::exception& e) {
+                if (std::string(e.what()) == "Not implemented") {
+                    range_time = 0;
+                } else {
+                    throw;
+                }
+            }
+            
+            range_times.push_back(range_time);
+            if (!selectivity_values.empty()) {
+                selectivity_values += ", ";
+            }
+            selectivity_values += std::to_string(selectivity);
+        }
+        
+        std::string time_values;
+        for (size_t i = 0; i < range_times.size(); ++i) {
+            if (i > 0) time_values += ", ";
+            time_values += std::to_string(range_times[i]);
+        }
+        
+        spdlog::info("Range Query Times (ns) for selectivity [{}]: {}", 
+                    selectivity_values, time_values);
+    }
 }
+
 
 int main(int argc, char *argv[]) {
     auto config = args::parse_args(argc, argv);

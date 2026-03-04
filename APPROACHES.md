@@ -2,8 +2,8 @@ This document tracks indexing approaches referenced in `src/bliss/` and their pr
 
 ## Integrated Approaches
 - ALEX
-  Paper: https://doi.org/10.1145/3318464.3389711
-  Repo: https://github.com/microsoft/ALEX
+  -- Paper: https://doi.org/10.1145/3318464.3389711
+  -- Repo: https://github.com/microsoft/ALEX
 - ART
   Paper: https://doi.org/10.1109/ICDE.2013.6544812
   Repo: https://github.com/BU-DiSC/ART
